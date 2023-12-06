@@ -17,6 +17,7 @@
     "module": "NodeNext",
     "declaration": true,
     "declarationMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "sourceMap": true
   }
 }
