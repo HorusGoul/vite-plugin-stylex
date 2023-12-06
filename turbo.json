@@ -1,0 +1,26 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "lint:fix": {
+      "cache": false
+    },
+    "typecheck": {
+      "outputs": []
+    },
+    "test": {
+      "outputs": [],
+      "inputs": ["src/**/*.{ts,tsx}", "test/**/*.{ts,tsx}", "vite.config.ts"]
+    },
+    "test:coverage": {
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**/*.{ts,tsx}", "test/**/*.{ts,tsx}", "vite.config.ts"]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "vite-plugin-stylex",
+  "version": "0.0.0",
+  "description": "Vite Plugin for StyleX",
+  "author": "Horus Lugo <hola@horus.dev>",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": false,
+  "exports": {
+    "./package.json": "./package.json",
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    }
+  },
+  "scripts": {
+    "cleanup": "rm -rf dist",
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5",
+    "@types/node": "20",
+    "typescript": "5.2.2",
+    "vite": "^4"
+  },
+  "dependencies": {
+    "@babel/core": "^7.23.5",
+    "@babel/plugin-syntax-flow": "^7.23.3",
+    "@babel/plugin-syntax-jsx": "^7.23.3",
+    "@babel/plugin-syntax-typescript": "^7.23.3",
+    "@stylexjs/babel-plugin": "^0.3.0",
+    "culori": "^3.3.0"
+  },
+  "peerDependencies": {
+    "vite": "^4"
+  }
+}

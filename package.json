@@ -1,0 +1,24 @@
+{
+  "name": "root",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Horus Lugo <hola@horus.dev>",
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "test": "turbo run test",
+    "test:coverage": "turbo run test:coverage",
+    "typecheck": "turbo run typecheck",
+    "publish-packages": "turbo run build lint test typecheck && changeset publish"
+  },
+  "dependencies": {
+    "@changesets/cli": "2.26.2",
+    "turbo": "1.10.13"
+  },
+  "packageManager": "pnpm@8.5.1",
+  "engines": {
+    "node": "^20"
+  }
+}
