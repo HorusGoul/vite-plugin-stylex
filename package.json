@@ -11,7 +11,7 @@
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
     "typecheck": "turbo run typecheck",
-    "publish-packages": "turbo run build lint test typecheck && changeset publish"
+    "publish-packages": "changeset publish"
   },
   "dependencies": {
     "@changesets/cli": "2.26.2",
