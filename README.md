@@ -18,7 +18,7 @@ pnpm add --save-dev vite-plugin-stylex
 
 ## Setup
 
-1. Import the plugin in your `vite.config.ts` file:
+For a basic SPA setup, you only need to add the plugin to your Vite config:
 
 ```ts
 // ... other imports
@@ -30,7 +30,23 @@ export default defineConfig({
 });
 ```
 
-2. That's it! You can now use StyleX in your Vite project 😄
+### Extra steps for frameworks or SSR
+
+Other setups may require extra steps to get StyleX working. For example, Remix requires you to import the CSS output in your root component.
+
+#### Remix
+
+Import the CSS output in your `root.tsx` file:
+
+```tsx
+import "virtual:stylex.css";
+
+// your root component
+```
+
+#### Other Frameworks
+
+It's possible that other frameworks don't work out of the box. If you find that this is the case, please open an issue.
 
 # Acknowledgments
 
