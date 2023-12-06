@@ -56,24 +56,26 @@ export default function styleXVitePlugin({
     generateBundle() {
       const rules = Object.values(stylexRules).flat();
 
-      if (rules.length > 0) {
-        // @ts-ignore
-        const collectedCSS = stylexBabelPlugin.processStylexRules(rules, true);
-
-        const hash = crypto
-          .createHash("sha1")
-          .update(collectedCSS)
-          .digest("hex")
-          .slice(0, 8);
-
-        outputFileName = path.join(assetsDir, `stylex.${hash}.css`);
-
-        this.emitFile({
-          fileName: outputFileName,
-          source: collectedCSS,
-          type: "asset",
-        });
+      if (rules.length === 0) {
+        return;
       }
+
+      // @ts-ignore
+      const stylexCSS = stylexBabelPlugin.processStylexRules(rules, true);
+
+      const hash = crypto
+        .createHash("sha1")
+        .update(stylexCSS)
+        .digest("hex")
+        .slice(0, 8);
+
+      outputFileName = path.join(assetsDir, `stylex.${hash}.css`);
+
+      this.emitFile({
+        fileName: outputFileName,
+        source: stylexCSS,
+        type: "asset",
+      });
     },
 
     async transform(inputCode, id) {
