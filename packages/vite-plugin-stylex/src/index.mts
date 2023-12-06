@@ -103,9 +103,11 @@ export default function styleXVitePlugin({
       assetsDir = config.build?.assetsDir || "assets";
       publicBasePath = config.base || "/";
       hasRemix =
-        config.plugins
-          ?.flat()
-          .some((p) => p && "name" in p && p.name.includes("remix")) ?? false;
+        config.plugins?.flat().some((p) => {
+          if (p && "name" in p) {
+            return p.name.includes("remix") || p.name.includes("qwik");
+          }
+        }) ?? false;
     },
 
     buildStart() {
