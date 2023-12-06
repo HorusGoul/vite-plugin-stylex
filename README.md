@@ -1,6 +1,6 @@
 # vite-plugin-stylex
 
-Vite plugin for StyleX
+Unofficial Vite plugin for StyleX
 
 ## Install the package
 
