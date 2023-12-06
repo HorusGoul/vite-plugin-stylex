@@ -8,6 +8,13 @@
     "dist",
     "src"
   ],
+  "keywords": [
+    "vite",
+    "stylex",
+    "css-in-js",
+    "plugin"
+  ],
+  "repository": "https://www.github.com/HorusGoul/vite-plugin-stylex",
   "sideEffects": false,
   "exports": {
     "./package.json": "./package.json",
@@ -33,10 +40,9 @@
     "@babel/plugin-syntax-flow": "^7.23.3",
     "@babel/plugin-syntax-jsx": "^7.23.3",
     "@babel/plugin-syntax-typescript": "^7.23.3",
-    "@stylexjs/babel-plugin": "^0.3.0",
-    "culori": "^3.3.0"
+    "@stylexjs/babel-plugin": "^0.3.0"
   },
   "peerDependencies": {
-    "vite": "^4"
+    "vite": "^4 || ^5"
   }
 }
