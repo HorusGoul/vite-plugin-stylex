@@ -50,7 +50,7 @@ export default function styleXVitePlugin({
 
   let server: ViteDevServer;
 
-  let hasRemix = false;
+  let hasRemixOrAstro = false;
 
   let reloadCount = 0;
   function reloadStyleX() {
@@ -102,10 +102,12 @@ export default function styleXVitePlugin({
       isProd = env.mode === "production" || config.mode === "production";
       assetsDir = config.build?.assetsDir || "assets";
       publicBasePath = config.base || "/";
-      hasRemix =
-        config.plugins
-          ?.flat()
-          .some((p) => p && "name" in p && p.name.includes("remix")) ?? false;
+      hasRemixOrAstro =
+        config.plugins?.flat().some((p) => {
+          if (p && "name" in p) {
+            return p.name.includes("astro") || p.name.includes("remix");
+          }
+        }) ?? false;
     },
 
     buildStart() {
@@ -166,7 +168,7 @@ export default function styleXVitePlugin({
         return;
       }
 
-      const isCompileMode = isProd || isSSR || hasRemix;
+      const isCompileMode = isProd || isSSR || hasRemixOrAstro;
 
       const result = await babel.transformAsync(inputCode, {
         babelrc: false,

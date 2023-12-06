@@ -5,5 +5,8 @@ import styleX from "vite-plugin-stylex";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), styleX()],
+  integrations: [react()],
+  vite: {
+    plugins: [styleX()],
+  },
 });
