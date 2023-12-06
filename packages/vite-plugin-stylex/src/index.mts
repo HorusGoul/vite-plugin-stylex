@@ -54,13 +54,18 @@ export default function styleXVitePlugin({
 
   let reloadCount = 0;
   function reloadStyleX() {
+    reloadCount++;
+
+    if (!server) {
+      return;
+    }
+
     const module = server.moduleGraph.getModuleById(RESOLVED_STYLEX_MODULE_ID);
 
     if (!module) {
       return;
     }
 
-    reloadCount++;
     server.moduleGraph.invalidateModule(module);
     server.reloadModule(module);
   }
