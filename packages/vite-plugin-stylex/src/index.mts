@@ -1,4 +1,4 @@
-import type { Plugin } from "vite";
+import type { Plugin, ViteDevServer } from "vite";
 import babel from "@babel/core";
 import stylexBabelPlugin, {
   Options as StyleXOptions,
@@ -22,18 +22,78 @@ interface StyleXVitePluginOptions
       | "unstable_moduleResolution"
       | "useRemForFontSize"
     >
-  > {}
+  > {
+  stylexImports?: string[];
+}
 
 export default function styleXVitePlugin({
   unstable_moduleResolution = { type: "commonJS", rootDir: process.cwd() },
+  stylexImports = ["@stylexjs/stylex"],
   ...options
 }: Omit<StyleXVitePluginOptions, "dev" | "fileName"> = {}): Plugin {
   let stylexRules: Record<string, any> = {};
   let isProd = false;
   let assetsDir = "assets";
   let publicBasePath = "/";
+  let lastStyleXCSS: {
+    id: number;
+    css: string;
+  } = {
+    id: 0,
+    css: "",
+  };
 
   let outputFileName: string | null = null;
+
+  const VIRTUAL_STYLEX_MODULE_ID = "virtual:stylex.css";
+  const RESOLVED_STYLEX_MODULE_ID = "\0" + VIRTUAL_STYLEX_MODULE_ID;
+
+  let server: ViteDevServer;
+
+  let hasRemix = false;
+
+  let reloadCount = 0;
+  function reloadStyleX() {
+    reloadCount++;
+
+    if (!server) {
+      return;
+    }
+
+    const module = server.moduleGraph.getModuleById(RESOLVED_STYLEX_MODULE_ID);
+
+    if (!module) {
+      return;
+    }
+
+    server.moduleGraph.invalidateModule(module);
+    server.reloadModule(module);
+  }
+
+  function compileStyleX(): string {
+    if (reloadCount === lastStyleXCSS.id) {
+      return lastStyleXCSS.css;
+    }
+
+    const rules = Object.values(stylexRules).flat();
+
+    if (rules.length === 0) {
+      return "";
+    }
+
+    // @ts-ignore
+    const stylexCSS = stylexBabelPlugin.processStylexRules(
+      rules,
+      true
+    ) as string;
+
+    lastStyleXCSS = {
+      id: reloadCount,
+      css: stylexCSS,
+    };
+
+    return stylexCSS;
+  }
 
   return {
     name: "vite-plugin-stylex",
@@ -42,10 +102,30 @@ export default function styleXVitePlugin({
       isProd = env.mode === "production" || config.mode === "production";
       assetsDir = config.build?.assetsDir || "assets";
       publicBasePath = config.base || "/";
+      hasRemix =
+        config.plugins
+          ?.flat()
+          .some((p) => p && "name" in p && p.name.includes("remix")) ?? false;
     },
 
     buildStart() {
       stylexRules = {};
+    },
+
+    configureServer(_server) {
+      server = _server;
+    },
+
+    resolveId(id) {
+      if (id === VIRTUAL_STYLEX_MODULE_ID) {
+        return RESOLVED_STYLEX_MODULE_ID;
+      }
+    },
+
+    load(id) {
+      if (id === RESOLVED_STYLEX_MODULE_ID) {
+        return compileStyleX();
+      }
     },
 
     shouldTransformCachedModule({ id, meta }) {
@@ -54,30 +134,27 @@ export default function styleXVitePlugin({
     },
 
     generateBundle() {
-      const rules = Object.values(stylexRules).flat();
+      const stylexCSS = compileStyleX();
 
-      if (rules.length > 0) {
-        // @ts-ignore
-        const collectedCSS = stylexBabelPlugin.processStylexRules(rules, true);
+      const hash = crypto
+        .createHash("sha1")
+        .update(stylexCSS)
+        .digest("hex")
+        .slice(0, 8);
 
-        const hash = crypto
-          .createHash("sha1")
-          .update(collectedCSS)
-          .digest("hex")
-          .slice(0, 8);
+      outputFileName = path.join(assetsDir, `stylex.${hash}.css`);
 
-        outputFileName = path.join(assetsDir, `stylex.${hash}.css`);
-
-        this.emitFile({
-          fileName: outputFileName,
-          source: collectedCSS,
-          type: "asset",
-        });
-      }
+      this.emitFile({
+        fileName: outputFileName,
+        source: stylexCSS,
+        type: "asset",
+      });
     },
 
-    async transform(inputCode, id) {
-      this.setAssetSource;
+    async transform(inputCode, id, { ssr: isSSR } = {}) {
+      if (!stylexImports.some((importName) => inputCode.includes(importName))) {
+        return;
+      }
 
       const isJSLikeFile =
         id.endsWith(".js") ||
@@ -89,6 +166,8 @@ export default function styleXVitePlugin({
         return;
       }
 
+      const isCompileMode = isProd || isSSR || hasRemix;
+
       const result = await babel.transformAsync(inputCode, {
         babelrc: false,
         filename: id,
@@ -99,7 +178,13 @@ export default function styleXVitePlugin({
           jsxSyntaxPlugin,
           [
             stylexBabelPlugin,
-            { dev: !isProd, unstable_moduleResolution, ...options },
+            {
+              dev: !isProd,
+              unstable_moduleResolution,
+              importSources: stylexImports,
+              runtimeInjection: !isCompileMode,
+              ...options,
+            },
           ],
         ],
       });
@@ -110,10 +195,16 @@ export default function styleXVitePlugin({
 
       const { code, map, metadata } = result;
 
-      // @ts-ignore
-      if (isProd && metadata?.stylex != null && metadata?.stylex.length > 0) {
+      if (
+        isCompileMode &&
+        // @ts-ignore
+        metadata?.stylex != null &&
+        // @ts-ignore
+        metadata?.stylex.length > 0
+      ) {
         // @ts-ignore
         stylexRules[id] = metadata.stylex;
+        reloadStyleX();
       }
 
       return { code: code ?? undefined, map, meta: metadata };
