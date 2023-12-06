@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.1.0
+
+### Minor Changes
+
+- 01cc461: Remix Vite Support
+
 ## 0.0.2
 
 ### Patch Changes
