@@ -5,15 +5,15 @@ Vite plugin for StyleX
 ## Install the package
 
 ```bash
-npm install vite-plugin-stylex
+npm install --save-dev vite-plugin-stylex
 
 # or
 
-yarn add vite-plugin-stylex
+yarn add --dev vite-plugin-stylex
 
 # or
 
-pnpm add vite-plugin-stylex
+pnpm add --save-dev vite-plugin-stylex
 ```
 
 ## Setup
