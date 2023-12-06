@@ -79,8 +79,6 @@ export default function styleXVitePlugin({
     },
 
     async transform(inputCode, id) {
-      this.setAssetSource;
-
       const isJSLikeFile =
         id.endsWith(".js") ||
         id.endsWith(".jsx") ||
