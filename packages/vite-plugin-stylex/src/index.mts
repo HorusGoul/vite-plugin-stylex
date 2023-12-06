@@ -22,10 +22,13 @@ interface StyleXVitePluginOptions
       | "unstable_moduleResolution"
       | "useRemForFontSize"
     >
-  > {}
+  > {
+  stylexImports?: string[];
+}
 
 export default function styleXVitePlugin({
   unstable_moduleResolution = { type: "commonJS", rootDir: process.cwd() },
+  stylexImports = ["@stylexjs/stylex"],
   ...options
 }: Omit<StyleXVitePluginOptions, "dev" | "fileName"> = {}): Plugin {
   let stylexRules: Record<string, any> = {};
@@ -78,7 +81,11 @@ export default function styleXVitePlugin({
       });
     },
 
-    async transform(inputCode, id) {
+    async transform(inputCode, id, { ssr: isSSR } = {}) {
+      if (!stylexImports.some((importName) => inputCode.includes(importName))) {
+        return;
+      }
+
       const isJSLikeFile =
         id.endsWith(".js") ||
         id.endsWith(".jsx") ||
@@ -99,7 +106,12 @@ export default function styleXVitePlugin({
           jsxSyntaxPlugin,
           [
             stylexBabelPlugin,
-            { dev: !isProd, unstable_moduleResolution, ...options },
+            {
+              dev: !isProd,
+              unstable_moduleResolution,
+              importSources: stylexImports,
+              ...options,
+            },
           ],
         ],
       });
