@@ -9,9 +9,5 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <Card>Remix App with StyleX!</Card>
-    </div>
-  );
+  return <Card>Remix App with StyleX!</Card>;
 }
