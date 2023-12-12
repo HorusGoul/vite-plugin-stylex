@@ -16,7 +16,8 @@
       "outputs": []
     },
     "test": {
-      "outputs": ["^build"],
+      "dependsOn": ["^build"],
+      "outputs": [],
       "inputs": ["src/**/*.{ts,tsx}", "test/**/*.{ts,tsx}", "vite.config.ts"]
     },
     "test:coverage": {
