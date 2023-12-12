@@ -10,9 +10,7 @@ import {
   cleanHmrTest,
   friendlyClassNameTest,
 } from "@internal/test-utils";
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const CARD_COMPONENT_PATH = path.resolve(__dirname, "../src/Card.tsx");
+import { CARD_COMPONENT_PATH, VITE_ROOT } from "./utils";
 
 describe("dev", () => {
   let devServer: vite.ViteDevServer;
@@ -21,7 +19,7 @@ describe("dev", () => {
 
   beforeEach(async () => {
     devServer = await vite.createServer({
-      root: path.resolve(__dirname, "../"),
+      root: VITE_ROOT,
       server: {
         port: 0,
         host: "127.0.0.1",
