@@ -1,0 +1,23 @@
+{
+  "include": ["./src"],
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "composite": false,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "preserveWatchOutput": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": false,
+    "lib": ["ES2021", "DOM"],
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "sourceMap": true
+  }
+}

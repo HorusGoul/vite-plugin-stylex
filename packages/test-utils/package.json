@@ -1,0 +1,26 @@
+{
+  "name": "@internal/test-utils",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "cleanup": "rm -rf dist",
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "20",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "playwright-webkit": "^1.40.1"
+  }
+}
