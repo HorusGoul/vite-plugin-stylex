@@ -1,15 +1,13 @@
-name: Release
+name: CI
 
 on:
   push:
-    branches:
-      - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  release:
-    name: Release
+  ci:
+    name: CI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,11 +20,13 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: CI
+      - name: Turbo
         run: pnpm turbo run build lint test typecheck
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
+        # Only create a release pull request if this is a push to main
+        if: github.ref == 'refs/heads/main'
         with:
           publish: pnpm publish-packages
         env:
