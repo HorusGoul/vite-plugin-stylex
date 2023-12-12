@@ -20,6 +20,10 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright Webkit
+        run: pnpm playwright install --with-deps webkit
+        working-directory: packages/test-utils
+
       - name: Turbo
         run: pnpm turbo run build lint test typecheck
 
