@@ -16,10 +16,25 @@ export async function closeBrowser(browser: Browser) {
   await browser.close();
 }
 
-export async function makeTempDir() {
+export async function makeTempDir(prefix = tmpdir()) {
+  await fs.mkdir(prefix, { recursive: true });
+
   const tempDirPath = await fs.mkdtemp(
-    path.join(tmpdir(), "vite-plugin-stylex-e2e-")
+    path.join(prefix, "vite-plugin-stylex-e2e-")
   );
 
   return tempDirPath;
+}
+
+export async function findFreePort() {
+  const server = await import("node:net").then((m) =>
+    m.createServer((s) => s.end())
+  );
+
+  return new Promise<number>((resolve) => {
+    server.listen(0, () => {
+      const { port } = server.address() as { port: number };
+      server.close(() => resolve(port));
+    });
+  });
 }
