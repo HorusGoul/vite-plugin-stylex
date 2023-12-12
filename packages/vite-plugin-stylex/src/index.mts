@@ -134,12 +134,12 @@ export default function styleXVitePlugin({
     },
 
     generateBundle() {
+      const stylexCSS = compileStyleX();
+
       if (hasRemix) {
-        // Don't generate stylex.css in remix mode because it will be handled by remix
+        // Don't emit the CSS file if we're in Remix, since Remix will handle it
         return;
       }
-
-      const stylexCSS = compileStyleX();
 
       const hash = crypto
         .createHash("sha1")
