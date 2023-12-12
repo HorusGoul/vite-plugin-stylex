@@ -16,7 +16,7 @@
       "outputs": []
     },
     "test": {
-      "outputs": [],
+      "outputs": ["^build"],
       "inputs": ["src/**/*.{ts,tsx}", "test/**/*.{ts,tsx}", "vite.config.ts"]
     },
     "test:coverage": {
