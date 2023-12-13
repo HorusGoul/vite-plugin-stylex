@@ -11,9 +11,9 @@
     "test": "tsx --test test/*.test.ts"
   },
   "dependencies": {
-    "@remix-run/node": "^2.3.1",
-    "@remix-run/react": "^2.3.1",
-    "@remix-run/serve": "^2.3.1",
+    "@remix-run/node": "^2.4.0",
+    "@remix-run/react": "^2.4.0",
+    "@remix-run/serve": "^2.4.0",
     "@stylexjs/stylex": "^0.3.0",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
@@ -21,8 +21,8 @@
   },
   "devDependencies": {
     "@internal/test-utils": "workspace:*",
-    "@remix-run/dev": "^2.3.1",
-    "@remix-run/eslint-config": "^2.3.1",
+    "@remix-run/dev": "^2.4.0",
+    "@remix-run/eslint-config": "^2.4.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "eslint": "^8.38.0",
