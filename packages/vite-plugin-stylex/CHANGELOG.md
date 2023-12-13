@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.2.0
+
+### Minor Changes
+
+- d5e2642: **BREAKING CHANGE**: New approach for using StyleX with Remix
+
 ## 0.1.0
 
 ### Minor Changes
