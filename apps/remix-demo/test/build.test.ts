@@ -32,19 +32,12 @@ describe("build", () => {
     process.env.ASSETS_BUILD_DIRECTORY = path.join(tempPublicDir, "build");
     process.env.SERVER_BUILD_PATH = path.join(tempDir, "index.mjs");
 
-    const build = await vite.build({
-      root: VITE_ROOT,
+    const result = cp.spawnSync("pnpm", ["build"], {
+      cwd: VITE_ROOT,
+      env: process.env,
     });
 
-    const ssrBuild = await vite.build({
-      root: VITE_ROOT,
-      build: {
-        ssr: true,
-      },
-    });
-
-    assert.ok(build, "build should be truthy");
-    assert.ok(ssrBuild, "SSR build should be truthy");
+    assert.equal(result.status, 0, "build should exit with status code 0");
   });
 });
 
@@ -61,15 +54,9 @@ describe("build output", () => {
     process.env.ASSETS_BUILD_DIRECTORY = path.join(tempPublicDir, "build");
     process.env.SERVER_BUILD_PATH = path.join(tempDir, "index.mjs");
 
-    await vite.build({
-      root: VITE_ROOT,
-    });
-
-    await vite.build({
-      root: VITE_ROOT,
-      build: {
-        ssr: true,
-      },
+    cp.spawnSync("pnpm", ["build"], {
+      cwd: VITE_ROOT,
+      env: process.env,
     });
   });
 
@@ -81,7 +68,7 @@ describe("build output", () => {
   test("built assets should contain a stylesheet for the root component", async () => {
     const files = await fs.readdir(publicAssetsDir);
     const rootStylesheetFile = files.some(
-      (file) => file.includes("root--") && file.endsWith(".css")
+      (file) => file.startsWith("root") && file.endsWith(".css")
     );
 
     assert.ok(
@@ -93,13 +80,13 @@ describe("build output", () => {
   test("root stylesheet contains the stylex styles", async () => {
     const files = await fs.readdir(publicAssetsDir);
     const rootStylesheetFile = files.find(
-      (file) => file.includes("root--") && file.endsWith(".css")
+      (file) => file.startsWith("root") && file.endsWith(".css")
     );
     const stylexCss = await fs.readFile(
       path.join(publicAssetsDir, rootStylesheetFile!),
       "utf-8"
     );
-    const expectedCss = `background-color:#fff`;
+    const expectedCss = `background-color:white`;
 
     assert.ok(
       stylexCss.includes(expectedCss),

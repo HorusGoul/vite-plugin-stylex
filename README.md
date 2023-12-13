@@ -36,12 +36,19 @@ Other setups may require extra steps to get StyleX working. For example, Remix r
 
 #### Remix
 
-Import the CSS output in your `root.tsx` file:
+1. Create an index.css file in your app directory.
+2. Include the following:
+
+```css
+@stylex stylesheet;
+
+/* You can use other styles here */
+```
+
+3. Import the CSS file in your root component:
 
 ```tsx
-import "virtual:stylex.css";
-
-// your root component
+import "./index.css";
 ```
 
 #### Other Frameworks
