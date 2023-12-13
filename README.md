@@ -2,6 +2,9 @@
 
 Unofficial Vite plugin for StyleX
 
+> [!WARNING]  
+> This plugin is in early development and may not work as expected. Please report any issues you find.
+
 ## Install the package
 
 ```bash
