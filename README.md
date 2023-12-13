@@ -39,7 +39,7 @@ Other setups may require extra steps to get StyleX working. For example, Remix r
 
 #### Remix
 
-1. Create an index.css file in your app directory.
+1. Create an `index.css` file in your `app` directory.
 2. Include the following:
 
 ```css
@@ -48,7 +48,7 @@ Other setups may require extra steps to get StyleX working. For example, Remix r
 /* You can use other styles here */
 ```
 
-3. Import the CSS file in your root component:
+3. Import the CSS file in your `app/root.tsx` component:
 
 ```tsx
 import "./index.css";
