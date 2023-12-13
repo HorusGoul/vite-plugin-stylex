@@ -7,7 +7,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import "virtual:stylex.css";
+import "./stylex.css";
 
 export default function App() {
   return (

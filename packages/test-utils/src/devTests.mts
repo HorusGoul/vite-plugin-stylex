@@ -1,7 +1,7 @@
 import { Page } from "playwright-webkit";
 import * as fs from "node:fs/promises";
 
-const CARD_SELECTOR = `[data-testId='card']`;
+export const CARD_SELECTOR = `[data-testId='card']`;
 const CARD_FRIENDLY_CLASSNAME = `Card__styles.root`;
 
 export async function runtimeInjectionTest(page: Page) {

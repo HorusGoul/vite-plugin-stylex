@@ -26,6 +26,8 @@ interface StyleXVitePluginOptions
   stylexImports?: string[];
 }
 
+const STYLEX_REPLACE_RULE = "@stylex stylesheet;";
+
 export default function styleXVitePlugin({
   unstable_moduleResolution = { type: "commonJS", rootDir: process.cwd() },
   stylexImports = ["@stylexjs/stylex"],
@@ -44,9 +46,7 @@ export default function styleXVitePlugin({
   };
 
   let outputFileName: string | null = null;
-
-  const VIRTUAL_STYLEX_MODULE_ID = "virtual:stylex.css";
-  const RESOLVED_STYLEX_MODULE_ID = "\0" + VIRTUAL_STYLEX_MODULE_ID;
+  let moduleToInvalidate: string | null = null;
 
   let server: ViteDevServer;
 
@@ -56,11 +56,11 @@ export default function styleXVitePlugin({
   function reloadStyleX() {
     reloadCount++;
 
-    if (!server) {
+    if (!server || !moduleToInvalidate) {
       return;
     }
 
-    const module = server.moduleGraph.getModuleById(RESOLVED_STYLEX_MODULE_ID);
+    const module = server.moduleGraph.getModuleById(moduleToInvalidate);
 
     if (!module) {
       return;
@@ -116,31 +116,63 @@ export default function styleXVitePlugin({
       server = _server;
     },
 
-    resolveId(id) {
-      if (id === VIRTUAL_STYLEX_MODULE_ID) {
-        return RESOLVED_STYLEX_MODULE_ID;
-      }
-    },
-
-    load(id) {
-      if (id === RESOLVED_STYLEX_MODULE_ID) {
-        return compileStyleX();
-      }
-    },
-
     shouldTransformCachedModule({ id, meta }) {
       stylexRules[id] = meta.stylex;
       return false;
     },
 
-    generateBundle() {
+    generateBundle(_, bundle) {
       const stylexCSS = compileStyleX();
 
-      const hash = crypto
-        .createHash("sha1")
-        .update(stylexCSS)
-        .digest("hex")
-        .slice(0, 8);
+      const hashContents = (contents: string) =>
+        crypto.createHash("sha1").update(contents).digest("hex").slice(0, 8);
+
+      if (hasRemix) {
+        const rootCssFile = Object.values(bundle).find(
+          (b) => b.name === "root.css"
+        );
+
+        if (!rootCssFile) {
+          this.warn(
+            "Could not find root.css file. Did you import styles in the root of your Remix app?"
+          );
+          return;
+        }
+
+        if (rootCssFile.type !== "asset") {
+          this.error("root.css file is not an asset.");
+          return;
+        }
+
+        let rootCss = rootCssFile.source.toString();
+        rootCss = rootCss.replace(STYLEX_REPLACE_RULE, stylexCSS);
+
+        const hash = hashContents(rootCss);
+
+        const dir = path.dirname(rootCssFile.fileName);
+        delete bundle[rootCssFile.fileName];
+        const newCssFileName = path.join(dir, `root-${hash}.css`);
+
+        this.emitFile({
+          ...rootCssFile,
+          fileName: newCssFileName,
+          source: rootCss,
+        });
+
+        const rootJsFile = Object.values(bundle).find((b) => b.name === "root");
+
+        if (rootJsFile?.type !== "chunk") {
+          this.error("Could not find root chunk.");
+          return;
+        }
+
+        rootJsFile.viteMetadata?.importedCss?.delete(rootCssFile.fileName);
+        rootJsFile.viteMetadata?.importedCss?.add(newCssFileName);
+        return;
+      }
+
+      // SPA behavior
+      const hash = hashContents(stylexCSS);
 
       outputFileName = path.join(assetsDir, `stylex.${hash}.css`);
 
@@ -148,10 +180,24 @@ export default function styleXVitePlugin({
         fileName: outputFileName,
         source: stylexCSS,
         type: "asset",
+        name: "stylex.css",
       });
     },
 
     async transform(inputCode, id, { ssr: isSSR } = {}) {
+      if (
+        !isProd &&
+        id.endsWith(".css") &&
+        inputCode.includes(STYLEX_REPLACE_RULE)
+      ) {
+        if (moduleToInvalidate && moduleToInvalidate !== id) {
+          this.error("Multiple CSS imports with the stylex comment detected.");
+        }
+
+        moduleToInvalidate = id;
+        return inputCode.replace(STYLEX_REPLACE_RULE, compileStyleX());
+      }
+
       if (!stylexImports.some((importName) => inputCode.includes(importName))) {
         return;
       }

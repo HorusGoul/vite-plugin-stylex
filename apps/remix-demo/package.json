@@ -7,7 +7,8 @@
     "build": "vite build && vite build --ssr",
     "dev": "vite dev",
     "start": "remix-serve ./build/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "test": "tsx --test test/*.test.ts"
   },
   "dependencies": {
     "@remix-run/node": "^2.3.1",
@@ -19,15 +20,17 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@internal/test-utils": "workspace:*",
     "@remix-run/dev": "^2.3.1",
     "@remix-run/eslint-config": "^2.3.1",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "eslint": "^8.38.0",
+    "tsx": "^4.6.2",
     "typescript": "^5.1.6",
     "vite": "^5.0.0",
-    "vite-tsconfig-paths": "^4.2.1",
-    "vite-plugin-stylex": "workspace:*"
+    "vite-plugin-stylex": "workspace:*",
+    "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
     "node": ">=18.0.0"
