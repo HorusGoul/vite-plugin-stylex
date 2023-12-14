@@ -33,8 +33,17 @@ jobs:
       - name: Build demos
         run: pnpm turbo run build --filter='*-demo'
 
-      - name: Run all tests
-        run: pnpm turbo run test
+      - name: Run SPA tests
+        run: pnpm test
+        working-directory: apps/vite-demo
+
+      - name: Run Remix tests
+        run: pnpm test
+        working-directory: apps/remix-demo
+
+      - name: Run SvelteKit tests
+        run: pnpm test
+        working-directory: apps/sveltekit-demo
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
