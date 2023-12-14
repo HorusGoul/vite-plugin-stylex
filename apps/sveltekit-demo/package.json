@@ -6,8 +6,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "typecheck:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "test": "tsx --test test/*.test.ts",
     "prepare": "svelte-kit sync"
   },
