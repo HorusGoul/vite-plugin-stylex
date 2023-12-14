@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.3.0
+
+### Minor Changes
+
+- 35daa75: Add SvelteKit support
+
 ## 0.2.0
 
 ### Minor Changes
