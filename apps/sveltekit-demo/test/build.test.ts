@@ -17,12 +17,10 @@ const COMPILED_ASSETS_FOLDER = path.join(
 );
 
 describe("build", () => {
-  test("builds without crashing", async () => {
-    const result = await vite.build({
+  before(async () => {
+    await vite.build({
       root: VITE_ROOT,
     });
-
-    assert.ok(result);
   });
 
   test("built assets should contain stylesheets with StyleX CSS", async () => {
