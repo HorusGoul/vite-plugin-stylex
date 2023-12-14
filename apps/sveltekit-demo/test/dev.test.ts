@@ -1,4 +1,4 @@
-import { describe, test, beforeEach, afterEach } from "node:test";
+import { describe, test, before, after } from "node:test";
 import * as vite from "vite";
 import {
   Browser,
@@ -15,7 +15,7 @@ describe("dev", () => {
   let serverUrl: string;
   let browser: Browser;
 
-  beforeEach(async () => {
+  before(async () => {
     devServer = await vite.createServer({
       root: VITE_ROOT,
       server: {
@@ -37,7 +37,7 @@ describe("dev", () => {
     browser = await openBrowser();
   });
 
-  afterEach(async () => {
+  after(async () => {
     await devServer.close();
     await closeBrowser(browser);
   });
@@ -50,11 +50,11 @@ describe("dev", () => {
   });
 
   describe("hmr", () => {
-    beforeEach(async () => {
+    before(async () => {
       await cleanHmrTest(CARD_COMPONENT_PATH);
     });
 
-    afterEach(async () => {
+    after(async () => {
       await cleanHmrTest(CARD_COMPONENT_PATH);
     });
 
