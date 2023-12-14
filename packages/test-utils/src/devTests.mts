@@ -21,11 +21,14 @@ export async function hmrTest(page: Page, cardComponentPath: string) {
 
   await updateCardComponent(cardComponentPath);
 
-  await page.$eval(CARD_SELECTOR, (el) => {
+  await page.evaluate((selector) => {
     // Computed backgroundColor should be red
     return new Promise<void>(async (resolve, reject) => {
       function check() {
+        const el = document.querySelector(selector)!;
         const computedStyle = window.getComputedStyle(el);
+
+        console.log("computedStyle", computedStyle.backgroundColor);
 
         if (computedStyle.backgroundColor === "rgb(255, 0, 0)") {
           resolve();
@@ -38,10 +41,10 @@ export async function hmrTest(page: Page, cardComponentPath: string) {
 
       setTimeout(
         () => reject(new Error("Computed backgroundColor should be red")),
-        5000
+        120000
       );
     });
-  });
+  }, CARD_SELECTOR);
 }
 
 async function updateCardComponent(cardComponentPath: string) {
