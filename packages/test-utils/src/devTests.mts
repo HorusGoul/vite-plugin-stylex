@@ -25,7 +25,12 @@ export async function hmrTest(page: Page, cardComponentPath: string) {
     // Computed backgroundColor should be red
     return new Promise<void>(async (resolve, reject) => {
       function check() {
-        const el = document.querySelector(selector)!;
+        const el = document.querySelector(selector);
+
+        if (!el) {
+          return;
+        }
+
         const computedStyle = window.getComputedStyle(el);
 
         if (computedStyle.backgroundColor === "rgb(255, 0, 0)") {
