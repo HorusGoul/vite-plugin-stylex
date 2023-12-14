@@ -3,6 +3,8 @@ import * as fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import * as path from "node:path";
 
+export { killPortProcess } from "kill-port-process";
+
 export type { Browser };
 
 export async function openBrowser() {

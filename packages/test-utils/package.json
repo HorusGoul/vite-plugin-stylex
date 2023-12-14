@@ -21,6 +21,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "kill-port-process": "^3.2.1",
     "playwright-webkit": "^1.40.1"
   }
 }
