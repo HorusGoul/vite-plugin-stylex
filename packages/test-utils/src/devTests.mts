@@ -28,8 +28,6 @@ export async function hmrTest(page: Page, cardComponentPath: string) {
         const el = document.querySelector(selector)!;
         const computedStyle = window.getComputedStyle(el);
 
-        console.log("computedStyle", computedStyle.backgroundColor);
-
         if (computedStyle.backgroundColor === "rgb(255, 0, 0)") {
           resolve();
         } else {
