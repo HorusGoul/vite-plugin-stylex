@@ -74,6 +74,13 @@ importers:
         version: 4.2.1(typescript@5.2.2)(vite@5.0.6)
 
   apps/sveltekit-demo:
+    dependencies:
+      '@stylexjs/stylex':
+        specifier: ^0.3.0
+        version: 0.3.0
+      vite-plugin-stylex:
+        specifier: workspace:^
+        version: link:../../packages/vite-plugin-stylex
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^2.0.0
