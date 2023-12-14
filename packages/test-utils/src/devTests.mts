@@ -41,7 +41,7 @@ export async function hmrTest(page: Page, cardComponentPath: string) {
 
       setTimeout(
         () => reject(new Error("Computed backgroundColor should be red")),
-        120000
+        5000
       );
     });
   }, CARD_SELECTOR);
