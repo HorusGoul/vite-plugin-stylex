@@ -3,7 +3,12 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": [
+        "dist/**",
+        ".svelte-kit/output/**",
+        "build/**",
+        "public/build/**"
+      ]
     },
     "lint": {
       "outputs": []

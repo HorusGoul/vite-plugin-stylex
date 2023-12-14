@@ -24,8 +24,17 @@ jobs:
         run: pnpm playwright install --with-deps webkit
         working-directory: packages/test-utils
 
-      - name: Turbo
-        run: pnpm turbo run build lint test typecheck
+      - name: Lint & Typecheck
+        run: pnpm turbo run lint typecheck
+
+      - name: Build vite-plugin-stylex
+        run: pnpm turbo run build --filter=vite-plugin-stylex
+
+      - name: Build demos
+        run: pnpm turbo run build --filter='*-demo'
+
+      - name: Run all tests
+        run: pnpm turbo run test
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
