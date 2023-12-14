@@ -54,6 +54,18 @@ Other setups may require extra steps to get StyleX working. For example, Remix r
 import "./index.css";
 ```
 
+#### SvelteKit
+
+Create a `+layout.svelte` file in your `src/routes` directory:
+
+```svelte
+<slot />
+
+<style>
+  @stylex stylesheet;
+</style>
+```
+
 #### Other Frameworks
 
 It's possible that other frameworks don't work out of the box. If you find that this is the case, please open an issue.

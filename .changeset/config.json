@@ -7,5 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["vite-demo", "remix-demo", "@internal/*"]
+  "ignore": ["*-demo", "@internal/*"]
 }

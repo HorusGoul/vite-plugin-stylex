@@ -19,29 +19,11 @@ export async function hmrTest(page: Page, cardComponentPath: string) {
     state: "visible",
   });
 
+  await waitForCardBackgroundColor(page, "rgb(255, 255, 255)");
+
   await updateCardComponent(cardComponentPath);
 
-  await page.$eval(CARD_SELECTOR, (el) => {
-    // Computed backgroundColor should be red
-    return new Promise<void>(async (resolve, reject) => {
-      function check() {
-        const computedStyle = window.getComputedStyle(el);
-
-        if (computedStyle.backgroundColor === "rgb(255, 0, 0)") {
-          resolve();
-        } else {
-          setTimeout(check, 50);
-        }
-      }
-
-      check();
-
-      setTimeout(
-        () => reject(new Error("Computed backgroundColor should be red")),
-        5000
-      );
-    });
-  });
+  await waitForCardBackgroundColor(page, "rgb(255, 0, 0)");
 }
 
 async function updateCardComponent(cardComponentPath: string) {
@@ -53,6 +35,42 @@ async function updateCardComponent(cardComponentPath: string) {
   );
 
   await fs.writeFile(cardComponentPath, newSrc);
+}
+
+function waitForCardBackgroundColor(page: Page, color: string) {
+  return page.evaluate(
+    ({ selector, color }) => {
+      return new Promise<void>((resolve, reject) => {
+        function check() {
+          const el = document.querySelector(selector);
+
+          if (!el) {
+            return;
+          }
+
+          const computedStyle = window.getComputedStyle(el);
+
+          if (computedStyle.backgroundColor === color) {
+            resolve();
+          } else {
+            setTimeout(check, 50);
+          }
+        }
+
+        check();
+
+        setTimeout(
+          () =>
+            reject(new Error(`Computed backgroundColor should be ${color}`)),
+          5000
+        );
+      });
+    },
+    {
+      selector: CARD_SELECTOR,
+      color,
+    }
+  );
 }
 
 export async function cleanHmrTest(cardComponentPath: string) {

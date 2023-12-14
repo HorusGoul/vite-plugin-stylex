@@ -1,4 +1,4 @@
-import type { Plugin, ViteDevServer } from "vite";
+import type { Plugin, ViteDevServer, Rollup } from "vite";
 import babel from "@babel/core";
 import stylexBabelPlugin, {
   Options as StyleXOptions,
@@ -28,6 +28,8 @@ interface StyleXVitePluginOptions
 
 const STYLEX_REPLACE_RULE = "@stylex stylesheet;";
 
+type Framework = "remix" | "sveltekit" | "none";
+
 export default function styleXVitePlugin({
   unstable_moduleResolution = { type: "commonJS", rootDir: process.cwd() },
   stylexImports = ["@stylexjs/stylex"],
@@ -49,8 +51,7 @@ export default function styleXVitePlugin({
   let moduleToInvalidate: string | null = null;
 
   let server: ViteDevServer;
-
-  let hasRemix = false;
+  let framework: Framework = "none";
 
   let reloadCount = 0;
   function reloadStyleX() {
@@ -102,10 +103,26 @@ export default function styleXVitePlugin({
       isProd = env.mode === "production" || config.mode === "production";
       assetsDir = config.build?.assetsDir || "assets";
       publicBasePath = config.base || "/";
-      hasRemix =
-        config.plugins
-          ?.flat()
-          .some((p) => p && "name" in p && p.name.includes("remix")) ?? false;
+    },
+
+    configResolved(config) {
+      for (const plugin of config.plugins) {
+        if (!plugin || !("name" in plugin)) {
+          continue;
+        }
+
+        const name = plugin.name;
+
+        if (name.includes("remix")) {
+          framework = "remix";
+          break;
+        }
+
+        if (name.includes("sveltekit")) {
+          framework = "sveltekit";
+          break;
+        }
+      }
     },
 
     buildStart() {
@@ -127,7 +144,7 @@ export default function styleXVitePlugin({
       const hashContents = (contents: string) =>
         crypto.createHash("sha1").update(contents).digest("hex").slice(0, 8);
 
-      if (hasRemix) {
+      if (framework === "remix") {
         const rootCssFile = Object.values(bundle).find(
           (b) => b.name === "root.css"
         );
@@ -171,6 +188,66 @@ export default function styleXVitePlugin({
         return;
       }
 
+      if (framework === "sveltekit") {
+        const values = Object.values(bundle);
+
+        const cssFilesWithStyleX = values.filter(
+          (b): b is Rollup.OutputAsset =>
+            b.type === "asset" &&
+            b.fileName.endsWith(".css") &&
+            b.source.toString().includes(STYLEX_REPLACE_RULE)
+        );
+
+        if (cssFilesWithStyleX.length === 0) {
+          this.warn(
+            "Could not find any CSS files with the stylex comment. Did you import styles in the root of your SvelteKit app?"
+          );
+          return;
+        }
+
+        for (const cssFile of cssFilesWithStyleX) {
+          const relatedJsChunk = values.find(
+            (b): b is Rollup.OutputChunk =>
+              b.type === "chunk" &&
+              !!b.viteMetadata?.importedCss.has(cssFile.fileName)
+          );
+
+          if (!relatedJsChunk) {
+            this.error(
+              `Could not find related JS chunk for CSS file ${cssFile.fileName}.`
+            );
+            return;
+          }
+
+          let css = cssFile.source.toString();
+          css = css.replace(STYLEX_REPLACE_RULE, stylexCSS);
+
+          const hash = hashContents(css);
+
+          const dir = path.dirname(cssFile.fileName);
+          const basename = path.basename(cssFile.fileName);
+          delete bundle[cssFile.fileName];
+
+          // Svelte uses dots as separator for CSS file names.
+          // If we have `layout.HASH.css` we can replace the HASH part with the new hash.
+          const newCssFileName = path.join(
+            dir,
+            basename.replace(/\.([^.]+)\.css$/, `.${hash}.css`)
+          );
+
+          this.emitFile({
+            ...cssFile,
+            fileName: newCssFileName,
+            source: css,
+          });
+
+          relatedJsChunk.viteMetadata?.importedCss?.delete(cssFile.fileName);
+          relatedJsChunk.viteMetadata?.importedCss?.add(newCssFileName);
+        }
+
+        return;
+      }
+
       // SPA behavior
       const hash = hashContents(stylexCSS);
 
@@ -202,17 +279,7 @@ export default function styleXVitePlugin({
         return;
       }
 
-      const isJSLikeFile =
-        id.endsWith(".js") ||
-        id.endsWith(".jsx") ||
-        id.endsWith(".ts") ||
-        id.endsWith(".tsx");
-
-      if (!isJSLikeFile) {
-        return;
-      }
-
-      const isCompileMode = isProd || isSSR || hasRemix;
+      const isCompileMode = isProd || isSSR || framework !== "none";
 
       const result = await babel.transformAsync(inputCode, {
         babelrc: false,
