@@ -12,6 +12,8 @@ jobs:
     needs: [check, test]
     name: Release
     runs-on: ubuntu-latest
+    # Only create a release pull request if this is a push to main
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -29,8 +31,6 @@ jobs:
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
-        # Only create a release pull request if this is a push to main
-        if: github.ref == 'refs/heads/main'
         with:
           publish: pnpm publish-packages
         env:
