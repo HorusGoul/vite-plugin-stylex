@@ -23,7 +23,11 @@
     "test": {
       "dependsOn": ["^build"],
       "outputs": [],
-      "inputs": ["src/**/*.{ts,tsx}", "test/**/*.{ts,tsx}", "vite.config.ts"]
+      "inputs": [
+        "src/**/*.{ts,tsx,vue,svelte}",
+        "test/**/*.{ts,tsx}",
+        "vite.config.ts"
+      ]
     },
     "test:coverage": {
       "outputs": ["coverage/**"],
