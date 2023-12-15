@@ -1,0 +1,25 @@
+{
+  "name": "vue-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@internal/test-utils": "workspace:*",
+    "@stylexjs/stylex": "^0.3.0",
+    "tsx": "^4.6.2",
+    "vite-plugin-stylex": "workspace:*",
+    "vue": "^3.3.11"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vue-tsc": "^1.8.25"
+  }
+}

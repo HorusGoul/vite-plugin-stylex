@@ -37,6 +37,10 @@ export default defineConfig({
 
 Other setups may require extra steps to get StyleX working. For example, Remix requires you to import the CSS output in your root component.
 
+- [Remix](#remix)
+- [SvelteKit](#sveltekit)
+- [Vue](#vue)
+
 #### Remix
 
 1. Create an `index.css` file in your `app` directory.
@@ -64,6 +68,35 @@ Create a `+layout.svelte` file in your `src/routes` directory:
 <style>
   @stylex stylesheet;
 </style>
+```
+
+#### Vue
+
+Vue doesn't require any extra setup steps, but here's an example of how you can use StyleX in your Vue components:
+
+```html
+<script lang="ts" setup>
+  import stylex from "@stylexjs/stylex";
+</script>
+
+<script lang="ts">
+  // StyleX styles need to be defined at the top level of the module
+  // so that StyleX can extract them.
+  const styles = stylex.create({
+    root: {
+      backgroundColor: "white",
+      borderRadius: 8,
+      padding: 16,
+      boxShadow: "0 0 16px rgba(0, 0, 0, 0.1)",
+    },
+  });
+</script>
+
+<template>
+  <div :class="stylex(styles.root)">
+    <slot />
+  </div>
+</template>
 ```
 
 #### Other Frameworks
