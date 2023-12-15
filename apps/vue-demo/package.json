@@ -9,6 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@internal/test-utils": "workspace:*",
+    "@stylexjs/stylex": "^0.3.0",
+    "tsx": "^4.6.2",
+    "vite-plugin-stylex": "workspace:*",
     "vue": "^3.3.11"
   },
   "devDependencies": {

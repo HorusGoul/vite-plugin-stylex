@@ -213,6 +213,18 @@ importers:
 
   apps/vue-demo:
     dependencies:
+      '@internal/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@stylexjs/stylex':
+        specifier: ^0.3.0
+        version: 0.3.0
+      tsx:
+        specifier: ^4.6.2
+        version: 4.6.2
+      vite-plugin-stylex:
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-stylex
       vue:
         specifier: ^3.3.11
         version: 3.3.11(typescript@5.3.3)
