@@ -8,8 +8,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci:
-    name: CI
+  publish:
+    needs: [check, test]
+    name: Release
+    runs-on: ubuntu-latest
+    # Only create a release pull request if this is a push to main
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - uses: dtinth/setup-github-actions-caching-for-turbo@v1
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build vite-plugin-stylex
+        run: pnpm turbo run build --filter=vite-plugin-stylex
+
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        with:
+          publish: pnpm publish-packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  check:
+    name: Lint & Build & Typecheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,6 +47,33 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
+      - uses: dtinth/setup-github-actions-caching-for-turbo@v1
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint & Typecheck
+        run: pnpm turbo run lint typecheck
+
+      - name: Build
+        run: pnpm turbo run build
+
+  # Test all ecosystem demos in parallel
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: [check]
+    strategy:
+      matrix:
+        demo: [vite, remix, sveltekit, storybook, vue]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - uses: dtinth/setup-github-actions-caching-for-turbo@v1
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
@@ -26,41 +82,13 @@ jobs:
         run: pnpm playwright install --with-deps webkit
         working-directory: packages/test-utils
 
-      - name: Lint & Typecheck
-        run: pnpm turbo run lint typecheck
+      - name: Build demo
+        run: pnpm turbo run build --filter=${{ matrix.demo }}-demo
 
-      - name: Build vite-plugin-stylex
-        run: pnpm turbo run build --filter=vite-plugin-stylex
-
-      - name: Build demos
-        run: pnpm turbo run build --filter='*-demo'
-
-      - name: Run SPA tests
-        run: pnpm test
-        working-directory: apps/vite-demo
-
-      - name: Run Remix tests
-        run: pnpm test
-        working-directory: apps/remix-demo
-
-      - name: Run SvelteKit tests
-        run: pnpm test
-        working-directory: apps/sveltekit-demo
-
-      - name: Run Storybook tests
-        run: pnpm test
-        working-directory: apps/storybook-demo
-
-      - name: Run Vue tests
-        run: pnpm test
-        working-directory: apps/vue-demo
-
-      - name: Create Release Pull Request
-        uses: changesets/action@v1
-        # Only create a release pull request if this is a push to main
-        if: github.ref == 'refs/heads/main'
+      - name: Run tests
+        uses: Wandalen/wretry.action@v1.3.0
         with:
-          publish: pnpm publish-packages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          command: pnpm test
+          attempt_limit: 3
+          attempt_delay: 1000
+          current_path: apps/${{ matrix.demo }}-demo
