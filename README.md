@@ -66,6 +66,35 @@ Create a `+layout.svelte` file in your `src/routes` directory:
 </style>
 ```
 
+#### Vue
+
+Vue doesn't require any extra setup steps, but here's an example of how you can use StyleX in your Vue components:
+
+```vue
+<script lang="ts" setup>
+import stylex from "@stylexjs/stylex";
+</script>
+
+<script lang="ts">
+// StyleX styles need to be defined at the top level of the module
+// so that StyleX can extract them.
+const styles = stylex.create({
+  root: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    padding: 16,
+    boxShadow: "0 0 16px rgba(0, 0, 0, 0.1)",
+  },
+});
+</script>
+
+<template>
+  <div :class="stylex(styles.root)">
+    <slot />
+  </div>
+</template>
+```
+
 #### Other Frameworks
 
 It's possible that other frameworks don't work out of the box. If you find that this is the case, please open an issue.
