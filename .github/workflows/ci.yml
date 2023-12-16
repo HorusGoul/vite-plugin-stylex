@@ -61,11 +61,12 @@ jobs:
   # Test all ecosystem demos in parallel
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs: [check]
     strategy:
       matrix:
         demo: [vite, remix, sveltekit, storybook, vue]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
