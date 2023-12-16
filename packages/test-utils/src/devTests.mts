@@ -23,7 +23,15 @@ export async function hmrTest(page: Page, cardComponentPath: string) {
 
   await updateCardComponent(cardComponentPath);
 
-  await waitForCardBackgroundColor(page, "rgb(255, 0, 0)");
+  // Some frameworks like Qwik don't support HMR for global CSS,
+  // so we need to retry in case the page reloads instead of HMRing.
+  // It's not truly testing for HMR, but it's what the framework supports.
+  // The objective is to make sure the style updates successfully, not
+  // test HMR capabilities of the framework.
+  await retryIfErrorDoesntMatch(
+    () => waitForCardBackgroundColor(page, "rgb(255, 0, 0)"),
+    "backgroundColor should be"
+  );
 }
 
 async function updateCardComponent(cardComponentPath: string) {
@@ -98,4 +106,21 @@ export async function friendlyClassNameTest(page: Page) {
   }
 
   throw new Error(`Expected element to have class ${CARD_FRIENDLY_CLASSNAME}`);
+}
+
+function retryIfErrorDoesntMatch(
+  fn: () => Promise<void>,
+  error: string
+): Promise<void> {
+  let maxRetries = 2;
+
+  return fn().catch((err) => {
+    if (!err.message.includes(error) && maxRetries > 0) {
+      maxRetries--;
+
+      return retryIfErrorDoesntMatch(fn, error);
+    }
+
+    throw err;
+  });
 }

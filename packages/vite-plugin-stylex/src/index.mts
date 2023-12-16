@@ -28,7 +28,7 @@ interface StyleXVitePluginOptions
 
 const STYLEX_REPLACE_RULE = "@stylex stylesheet;";
 
-type Framework = "remix" | "sveltekit" | "none";
+type Framework = "remix" | "sveltekit" | "qwik" | "none";
 
 export default function styleXVitePlugin({
   unstable_moduleResolution = { type: "commonJS", rootDir: process.cwd() },
@@ -48,7 +48,7 @@ export default function styleXVitePlugin({
   };
 
   let outputFileName: string | null = null;
-  let moduleToInvalidate: string | null = null;
+  let modulesToInvalidate = new Set<string>();
 
   let server: ViteDevServer;
   let framework: Framework = "none";
@@ -57,18 +57,20 @@ export default function styleXVitePlugin({
   function reloadStyleX() {
     reloadCount++;
 
-    if (!server || !moduleToInvalidate) {
+    if (!server || modulesToInvalidate.size === 0) {
       return;
     }
 
-    const module = server.moduleGraph.getModuleById(moduleToInvalidate);
+    for (const id of modulesToInvalidate) {
+      const module = server.moduleGraph.getModuleById(id);
 
-    if (!module) {
-      return;
+      if (!module) {
+        return;
+      }
+
+      server.moduleGraph.invalidateModule(module);
+      server.reloadModule(module);
     }
-
-    server.moduleGraph.invalidateModule(module);
-    server.reloadModule(module);
   }
 
   function compileStyleX(): string {
@@ -120,6 +122,11 @@ export default function styleXVitePlugin({
 
         if (name.includes("sveltekit")) {
           framework = "sveltekit";
+          break;
+        }
+
+        if (name.includes("qwik")) {
+          framework = "qwik";
           break;
         }
       }
@@ -262,16 +269,19 @@ export default function styleXVitePlugin({
     },
 
     async transform(inputCode, id, { ssr: isSSR } = {}) {
+      if (framework === "qwik" && isProd && /\.css/.test(id)) {
+        // For Qwik, the SPA behavior works fine,
+        // but we need to remove the stylex comment from all CSS files
+        // during builds, otherwise we'll emit it.
+        return inputCode.replace(STYLEX_REPLACE_RULE, "");
+      }
+
       if (
         !isProd &&
-        id.endsWith(".css") &&
+        /\.css/.test(id) &&
         inputCode.includes(STYLEX_REPLACE_RULE)
       ) {
-        if (moduleToInvalidate && moduleToInvalidate !== id) {
-          this.error("Multiple CSS imports with the stylex comment detected.");
-        }
-
-        moduleToInvalidate = id;
+        modulesToInvalidate.add(id);
         return inputCode.replace(STYLEX_REPLACE_RULE, compileStyleX());
       }
 
