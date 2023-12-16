@@ -48,7 +48,7 @@ export default function styleXVitePlugin({
   };
 
   let outputFileName: string | null = null;
-  let moduleToInvalidate: string | null = null;
+  let modulesToInvalidate = new Set<string>();
 
   let server: ViteDevServer;
   let framework: Framework = "none";
@@ -57,18 +57,20 @@ export default function styleXVitePlugin({
   function reloadStyleX() {
     reloadCount++;
 
-    if (!server || !moduleToInvalidate) {
+    if (!server || modulesToInvalidate.size === 0) {
       return;
     }
 
-    const module = server.moduleGraph.getModuleById(moduleToInvalidate);
+    for (const id of modulesToInvalidate) {
+      const module = server.moduleGraph.getModuleById(id);
 
-    if (!module) {
-      return;
+      if (!module) {
+        return;
+      }
+
+      server.moduleGraph.invalidateModule(module);
+      server.reloadModule(module);
     }
-
-    server.moduleGraph.invalidateModule(module);
-    server.reloadModule(module);
   }
 
   function compileStyleX(): string {
@@ -264,14 +266,10 @@ export default function styleXVitePlugin({
     async transform(inputCode, id, { ssr: isSSR } = {}) {
       if (
         !isProd &&
-        id.endsWith(".css") &&
+        /\.css/.test(id) &&
         inputCode.includes(STYLEX_REPLACE_RULE)
       ) {
-        if (moduleToInvalidate && moduleToInvalidate !== id) {
-          this.error("Multiple CSS imports with the stylex comment detected.");
-        }
-
-        moduleToInvalidate = id;
+        modulesToInvalidate.add(id);
         return inputCode.replace(STYLEX_REPLACE_RULE, compileStyleX());
       }
 

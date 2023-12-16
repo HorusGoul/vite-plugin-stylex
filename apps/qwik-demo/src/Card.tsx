@@ -1,10 +1,10 @@
-import * as stylex from "@stylexjs/stylex";
+import stylex from "@stylexjs/stylex";
 import { tokens } from "./theme.stylex";
 import { Slot, component$ } from "@builder.io/qwik";
 
 const Card = component$(() => {
   return (
-    <div {...stylex.props(styles.root)} data-testid="card">
+    <div class={stylex(styles.root)} data-testid="card">
       <Slot />
     </div>
   );
