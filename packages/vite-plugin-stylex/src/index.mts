@@ -28,7 +28,7 @@ interface StyleXVitePluginOptions
 
 const STYLEX_REPLACE_RULE = "@stylex stylesheet;";
 
-type Framework = "remix" | "sveltekit" | "none";
+type Framework = "remix" | "sveltekit" | "qwik" | "none";
 
 export default function styleXVitePlugin({
   unstable_moduleResolution = { type: "commonJS", rootDir: process.cwd() },
@@ -122,6 +122,11 @@ export default function styleXVitePlugin({
 
         if (name.includes("sveltekit")) {
           framework = "sveltekit";
+          break;
+        }
+
+        if (name.includes("qwik")) {
+          framework = "qwik";
           break;
         }
       }
@@ -264,6 +269,13 @@ export default function styleXVitePlugin({
     },
 
     async transform(inputCode, id, { ssr: isSSR } = {}) {
+      if (framework === "qwik" && isProd && /\.css/.test(id)) {
+        // For Qwik, the SPA behavior works fine,
+        // but we need to remove the stylex comment from all CSS files
+        // during builds, otherwise we'll emit it.
+        return inputCode.replace(STYLEX_REPLACE_RULE, "");
+      }
+
       if (
         !isProd &&
         /\.css/.test(id) &&
