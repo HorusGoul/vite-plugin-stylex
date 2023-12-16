@@ -40,6 +40,7 @@ Other setups may require extra steps to get StyleX working. For example, Remix r
 - [Remix](#remix)
 - [SvelteKit](#sveltekit)
 - [Vue](#vue)
+- [Qwik](#qwik)
 
 #### Remix
 
@@ -98,6 +99,17 @@ Vue doesn't require any extra setup steps, but here's an example of how you can 
   </div>
 </template>
 ```
+
+#### Qwik
+
+Open the `src/global.css` file and add the following:
+
+```css
+@stylex stylesheet;
+```
+
+> [!NOTE]
+> If you don't have a `src/global.css` file, create one and import it in your `src/root.tsx` file.
 
 #### Other Frameworks
 
