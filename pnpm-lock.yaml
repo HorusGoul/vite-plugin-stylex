@@ -23,6 +23,9 @@ importers:
       '@stylexjs/stylex':
         specifier: ^0.3.0
         version: 0.3.0
+      tsx:
+        specifier: ^4.6.2
+        version: 4.6.2
       vite-plugin-stylex:
         specifier: workspace:^
         version: link:../../packages/vite-plugin-stylex
