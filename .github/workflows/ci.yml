@@ -65,7 +65,7 @@ jobs:
     needs: [check]
     strategy:
       matrix:
-        demo: [vite, remix, sveltekit, storybook, vue]
+        demo: [vite, remix, sveltekit, storybook, vue, qwik]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
