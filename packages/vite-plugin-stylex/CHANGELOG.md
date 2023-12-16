@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.3.1
+
+### Patch Changes
+
+- 2ebc08f: Use posix paths for the href of the injected StyleX stylesheet to fix a Windows issue
+
 ## 0.3.0
 
 ### Minor Changes
