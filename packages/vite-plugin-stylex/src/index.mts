@@ -335,7 +335,12 @@ export default function styleXVitePlugin({
       }
 
       const { fileName } = asset;
-      const publicPath = path.join(publicBasePath, fileName);
+
+      // In Windows, we need to ensure we use posix paths to generate the correct URL for the <link> tag.
+      const publicPath = path.posix.join(
+        publicBasePath,
+        fileName.replace(/\\/g, "/")
+      );
 
       return [
         {
