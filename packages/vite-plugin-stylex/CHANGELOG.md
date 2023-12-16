@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.4.0
+
+### Minor Changes
+
+- 05cf519: Add support for Qwik
+
 ## 0.3.1
 
 ### Patch Changes
