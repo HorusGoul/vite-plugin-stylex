@@ -9,6 +9,7 @@ import {
   hmrTest,
   cleanHmrTest,
   friendlyClassNameTest,
+  externalStyleXTest,
 } from "@internal/test-utils";
 import { CARD_COMPONENT_PATH, VITE_ROOT } from "./utils";
 
@@ -56,6 +57,13 @@ describe("dev", () => {
     await page.goto(serverUrl);
 
     await friendlyClassNameTest(page);
+  });
+
+  test("external stylesheets like @stylexjs/open-props work", async () => {
+    const page = await browser.newPage();
+    await page.goto(serverUrl);
+
+    await externalStyleXTest(page);
   });
 
   describe("hmr", () => {

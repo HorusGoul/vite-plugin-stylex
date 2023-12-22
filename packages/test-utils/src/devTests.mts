@@ -34,6 +34,15 @@ export async function hmrTest(page: Page, cardComponentPath: string) {
   );
 }
 
+export async function externalStyleXTest(page: Page) {
+  await page.waitForSelector(CARD_SELECTOR, {
+    state: "visible",
+  });
+
+  // Corresponds with color.blue1 from @stylexjs/open-props
+  await waitForCardBorderColor(page, "rgb(208, 235, 255)");
+}
+
 async function updateCardComponent(cardComponentPath: string) {
   const src = await fs.readFile(cardComponentPath, "utf-8");
 
@@ -70,6 +79,41 @@ function waitForCardBackgroundColor(page: Page, color: string) {
         setTimeout(
           () =>
             reject(new Error(`Computed backgroundColor should be ${color}`)),
+          5000
+        );
+      });
+    },
+    {
+      selector: CARD_SELECTOR,
+      color,
+    }
+  );
+}
+
+function waitForCardBorderColor(page: Page, color: string) {
+  return page.evaluate(
+    ({ selector, color }) => {
+      return new Promise<void>((resolve, reject) => {
+        function check() {
+          const el = document.querySelector(selector);
+
+          if (!el) {
+            return;
+          }
+
+          const computedStyle = window.getComputedStyle(el);
+
+          if (computedStyle.borderColor === color) {
+            resolve();
+          } else {
+            setTimeout(check, 50);
+          }
+        }
+
+        check();
+
+        setTimeout(
+          () => reject(new Error(`Computed borderColor should be ${color}`)),
           5000
         );
       });

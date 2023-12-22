@@ -115,6 +115,25 @@ Open the `src/global.css` file and add the following:
 
 It's possible that other frameworks don't work out of the box. If you find that this is the case, please open an issue.
 
+## Working with external StyleX files
+
+If you want to use StyleX styles from another package, we need to tell Vite to not optimize the dependency so that the plugin can process them. To do this, we can use the `optimizeDeps` option:
+
+```ts
+import styleX from "vite-plugin-stylex";
+
+export default defineConfig({
+  plugins: [react(), styleX()],
+
+  optimizeDeps: {
+    exclude: ["cool-stylex-package"],
+  },
+});
+```
+
+> [!NOTE]
+> This is done by default for `@stylexjs/open-props`, if you want more libraries to be excluded by default, please submit an issue.
+
 # Acknowledgments
 
 - [@stylexjs/rollup-plugin](https://github.com/facebook/stylex/tree/main/packages/rollup-plugin) for the base implementation for this Vite plugin.

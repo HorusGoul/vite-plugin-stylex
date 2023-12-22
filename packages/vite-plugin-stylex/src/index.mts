@@ -108,6 +108,9 @@ export default function styleXVitePlugin({
     },
 
     configResolved(config) {
+      config.optimizeDeps.exclude = config.optimizeDeps.exclude || [];
+      config.optimizeDeps.exclude.push("@stylexjs/open-props");
+
       for (const plugin of config.plugins) {
         if (!plugin || !("name" in plugin)) {
           continue;
@@ -290,10 +293,13 @@ export default function styleXVitePlugin({
       }
 
       const isCompileMode = isProd || isSSR || framework !== "none";
+      const dir = path.dirname(id);
+      const filename = path.basename(id).split("?")[0];
+      const filePath = path.join(dir, filename);
 
       const result = await babel.transformAsync(inputCode, {
         babelrc: false,
-        filename: id,
+        filename: filePath,
         plugins: [
           /\.jsx?/.test(path.extname(id))
             ? flowSyntaxPlugin

@@ -10,6 +10,7 @@
     "test": "tsx --test test/*.test.ts"
   },
   "dependencies": {
+    "@stylexjs/open-props": "^0.3.0",
     "@stylexjs/stylex": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
