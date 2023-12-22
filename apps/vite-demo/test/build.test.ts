@@ -84,4 +84,22 @@ describe("build output", () => {
       `stylex stylesheet should contain the expected styles: ${expectedCss}`
     );
   });
+
+  test("stylex stylesheet contains styles from @stylexjs/open-props package", async () => {
+    const files = await fs.readdir(path.join(tempDir, "assets"));
+    const stylexFile = files.find(
+      (file) => file.includes("stylex") && file.endsWith(".css")
+    );
+    const stylexCss = await fs.readFile(
+      path.join(tempDir, "assets", stylexFile),
+      "utf-8"
+    );
+
+    // Corresponds with color.blue1 from @stylexjs/open-props
+    const expectedCss = `#d0ebff`;
+    assert.ok(
+      stylexCss.includes(expectedCss),
+      `stylex stylesheet should contain the expected styles: ${expectedCss}`
+    );
+  });
 });
