@@ -213,6 +213,9 @@ importers:
 
   apps/vite-demo:
     dependencies:
+      '@stylexjs/open-props':
+        specifier: ^0.3.0
+        version: 0.3.0
       '@stylexjs/stylex':
         specifier: ^0.3.0
         version: 0.3.0
@@ -4806,6 +4809,15 @@ packages:
       '@babel/traverse': 7.23.5
       '@babel/types': 7.23.5
       '@stylexjs/shared': 0.3.0
+    dev: false
+
+  /@stylexjs/open-props@0.3.0:
+    resolution: {integrity: sha512-0wCoGMjLlnNR76x/xA13jdDDhxWx05YBnXRLx0LOJeDdzKzSw4d/X+IfOP1+NchAepy2tAm0YQ6Yn9mHG7tL7g==}
+    dependencies:
+      css-mediaquery: 0.1.2
+      invariant: 2.2.4
+      styleq: 0.1.3
+      utility-types: 3.10.0
     dev: false
 
   /@stylexjs/shared@0.3.0:
