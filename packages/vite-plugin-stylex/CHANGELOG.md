@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.4.1
+
+### Patch Changes
+
+- e66e8a8: Fix importing external StyleX files like @stylexjs/open-props. Fixes #23
+
 ## 0.4.0
 
 ### Minor Changes
