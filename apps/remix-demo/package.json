@@ -14,7 +14,7 @@
     "@remix-run/node": "^2.4.0",
     "@remix-run/react": "^2.4.0",
     "@remix-run/serve": "^2.4.0",
-    "@stylexjs/stylex": "^0.3.0",
+    "@stylexjs/stylex": "^0.4.1",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

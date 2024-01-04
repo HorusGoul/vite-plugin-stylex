@@ -21,8 +21,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/test-utils
       '@stylexjs/stylex':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.1
+        version: 0.4.1
       tsx:
         specifier: ^4.6.2
         version: 4.6.2
@@ -64,8 +64,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(typescript@5.2.2)
       '@stylexjs/stylex':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.1
+        version: 0.4.1
       isbot:
         specifier: ^3.6.8
         version: 3.7.1
@@ -113,8 +113,8 @@ importers:
   apps/storybook-demo:
     dependencies:
       '@stylexjs/stylex':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.1
+        version: 0.4.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -180,8 +180,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/test-utils
       '@stylexjs/stylex':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.1
+        version: 0.4.1
       tsx:
         specifier: ^4.6.2
         version: 4.6.2
@@ -217,8 +217,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
       '@stylexjs/stylex':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.1
+        version: 0.4.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -257,8 +257,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/test-utils
       '@stylexjs/stylex':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.1
+        version: 0.4.1
       tsx:
         specifier: ^4.6.2
         version: 4.6.2
@@ -4826,8 +4826,8 @@ packages:
       postcss-value-parser: 4.2.0
     dev: false
 
-  /@stylexjs/stylex@0.3.0:
-    resolution: {integrity: sha512-iO9ayGjZ54IXIkXOLoNKf/GWS/3EGtJaxdLxvy7nUa30eUw6qMVvEgRi58S7MT+e/FJub5xaCM/j0oDHlDgcIg==}
+  /@stylexjs/stylex@0.4.1:
+    resolution: {integrity: sha512-xc3hjEtqpluoZ1RcJZ1c59bdMITMHPh0FmCNi/01amaPhEw040WqgR/KGFHIqxIer9wt5mOeED3iM9tSrljeaQ==}
     dependencies:
       css-mediaquery: 0.1.2
       invariant: 2.2.4
