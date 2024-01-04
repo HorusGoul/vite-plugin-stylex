@@ -315,6 +315,12 @@ importers:
       '@stylexjs/babel-plugin':
         specifier: ^0.3.0
         version: 0.3.0(@babel/core@7.23.5)(@babel/traverse@7.23.5)(@babel/types@7.23.5)
+      '@stylexjs/stylex':
+        specifier: ^0.4.1
+        version: 0.4.1
+      compare-versions:
+        specifier: ^6.1.0
+        version: 6.1.0
     devDependencies:
       '@types/babel__core':
         specifier: ^7.20.5
@@ -6510,6 +6516,10 @@ packages:
   /commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
     dev: true
+
+  /compare-versions@6.1.0:
+    resolution: {integrity: sha512-LNZQXhqUvqUTotpZ00qLSaify3b4VFD588aRr8MKFw4CMUr98ytzCW5wDH5qx/DEY5kCDXcbcRuCqL0szEf2tg==}
+    dev: false
 
   /compressible@2.0.18:
     resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
