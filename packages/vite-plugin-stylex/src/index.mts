@@ -12,6 +12,21 @@ import jsxSyntaxPlugin from "@babel/plugin-syntax-jsx";
 import typescriptSyntaxPlugin from "@babel/plugin-syntax-typescript";
 import path from "path";
 import crypto from "crypto";
+import { createRequire } from "module";
+import { satisfies } from "compare-versions";
+
+const require = createRequire(import.meta.url);
+
+const stylexPkg =
+  require("@stylexjs/stylex/package.json") as typeof import("@stylexjs/stylex/package.json");
+
+const pluginPkg =
+  // @ts-ignore - no need to include package.json in the output
+  require("../package.json") as typeof import("../package.json");
+
+const stylePackageVersion = stylexPkg.version;
+const pluginPackagePeerVersionRange =
+  pluginPkg.peerDependencies["@stylexjs/stylex"];
 
 interface StyleXVitePluginOptions
   extends Partial<
@@ -96,6 +111,25 @@ export default function styleXVitePlugin({
     };
 
     return stylexCSS;
+  }
+
+  let warned = false;
+  function warnIfVersionMismatch(ctx: Rollup.TransformPluginContext) {
+    if (warned) {
+      return;
+    }
+
+    if (!satisfies(stylePackageVersion, pluginPackagePeerVersionRange)) {
+      ctx.warn(
+        `The installed version of @stylexjs/styles might not be compatible with this version of vite-plugin-stylex, if you run into any issues please check for a newer version of either package, or open an issue in the vite-plugin-stylex repository.
+        
+- Expected version range of @stylexjs/stylex by vite-plugin-stylex: ${pluginPackagePeerVersionRange}
+- Installed version of @stylexjs/stylex: ${stylePackageVersion}
+        `
+      );
+    }
+
+    warned = true;
   }
 
   return {
@@ -291,6 +325,8 @@ export default function styleXVitePlugin({
       if (!stylexImports.some((importName) => inputCode.includes(importName))) {
         return;
       }
+
+      warnIfVersionMismatch(this);
 
       const isCompileMode = isProd || isSSR || framework !== "none";
       const dir = path.dirname(id);
