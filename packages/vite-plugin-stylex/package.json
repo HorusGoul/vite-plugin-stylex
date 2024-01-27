@@ -36,15 +36,15 @@
     "vite": "^4"
   },
   "dependencies": {
-    "@babel/core": "^7.23.5",
+    "@babel/core": "^7.23.9",
     "@babel/plugin-syntax-flow": "^7.23.3",
     "@babel/plugin-syntax-jsx": "^7.23.3",
     "@babel/plugin-syntax-typescript": "^7.23.3",
-    "@stylexjs/babel-plugin": "^0.4.1",
+    "@stylexjs/babel-plugin": "^0.5.1",
     "compare-versions": "^6.1.0"
   },
   "peerDependencies": {
-    "@stylexjs/stylex": "^0.4.1",
+    "@stylexjs/stylex": "^0.5.1",
     "vite": "^4 || ^5"
   }
 }
