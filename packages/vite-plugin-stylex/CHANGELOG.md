@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.5.0
+
+### Minor Changes
+
+- d81aad6: Support @stylexjs/stylex 0.5.1. Fixes #24, #29, #31.
+
 ## 0.4.1
 
 ### Patch Changes
