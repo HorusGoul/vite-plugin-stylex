@@ -1,5 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { tokens } from "./theme.stylex";
+import { aliasedTokens } from "@/aliased-import-theme.stylex";
 import { colors } from "@stylexjs/open-props/lib/colors.stylex";
 
 export default function Card({ children }: { children: React.ReactNode }) {
@@ -12,7 +13,7 @@ export default function Card({ children }: { children: React.ReactNode }) {
 
 const styles = stylex.create({
   root: {
-    backgroundColor: "white",
+    backgroundColor: aliasedTokens.primaryBackgroundcolor,
     borderRadius: 8,
     padding: 16,
     boxShadow: "0 0 16px rgba(0, 0, 0, 0.1)",
