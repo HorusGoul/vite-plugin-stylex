@@ -13,11 +13,12 @@ export default function Card({ children }: { children: React.ReactNode }) {
 
 const styles = stylex.create({
   root: {
-    backgroundColor: aliasedTokens.primaryBackgroundcolor,
+    backgroundColor: "white",
     borderRadius: 8,
     padding: 16,
     boxShadow: "0 0 16px rgba(0, 0, 0, 0.1)",
     color: tokens.primaryTextColor,
     border: `1px solid ${colors.blue1}`,
+    outlineColor: aliasedTokens.primaryOutlineColor,
   },
 });
