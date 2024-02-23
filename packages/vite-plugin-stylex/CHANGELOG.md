@@ -1,5 +1,12 @@
 # vite-plugin-stylex
 
+## 0.5.1
+
+### Patch Changes
+
+- 5c3523a: Make vite-plugin-stylex run in production mode only when the command is "build". Fixes #42.
+- 0dc6fb9: Resolve Vite aliases. Allow users to specify aliases through StyleX plugin options as well. Fixes #41.
+
 ## 0.5.0
 
 ### Minor Changes
