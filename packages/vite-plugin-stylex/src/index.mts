@@ -1,4 +1,4 @@
-import type { Plugin, ViteDevServer, Rollup } from "vite";
+import type { Plugin, ViteDevServer, Rollup, AliasOptions } from "vite";
 import babel from "@babel/core";
 import stylexBabelPlugin, {
   Options as StyleXOptions,
@@ -39,6 +39,22 @@ interface StyleXVitePluginOptions
     >
   > {
   stylexImports?: string[];
+  /**
+   * A map of aliases to their respective paths.
+   *
+   * @example
+   *
+   * ```ts
+   * {
+   *   "@/*": [path.resolve(__dirname, "src", "*")]
+   * }
+   * ```
+   *
+   * Ensure that the paths are absolute and that you include the `*` at the end of the path.
+   */
+  aliases?: {
+    [alias: string]: string[];
+  };
 }
 
 const STYLEX_REPLACE_RULE = "@stylex stylesheet;";
@@ -67,6 +83,7 @@ export default function styleXVitePlugin({
 
   let server: ViteDevServer;
   let framework: Framework = "none";
+  let aliases: Record<string, string[]> = {};
 
   let reloadCount = 0;
   function reloadStyleX() {
@@ -144,6 +161,15 @@ export default function styleXVitePlugin({
     configResolved(config) {
       config.optimizeDeps.exclude = config.optimizeDeps.exclude || [];
       config.optimizeDeps.exclude.push("@stylexjs/open-props");
+
+      for (const viteAlias of config.resolve.alias) {
+        if (typeof viteAlias.find === "string") {
+          // We need to convert Vite format to this plugin's format:
+          // Example: @ -> @/*
+          const alias = path.join(viteAlias.find, "*");
+          aliases[alias] = [path.join(viteAlias.replacement, "*")];
+        }
+      }
 
       for (const plugin of config.plugins) {
         if (!plugin || !("name" in plugin)) {
@@ -333,26 +359,45 @@ export default function styleXVitePlugin({
       const filename = path.basename(id).split("?")[0];
       const filePath = path.join(dir, filename);
 
-      const result = await babel.transformAsync(inputCode, {
-        babelrc: false,
-        filename: filePath,
-        plugins: [
-          /\.jsx?/.test(path.extname(id))
-            ? flowSyntaxPlugin
-            : typescriptSyntaxPlugin,
-          jsxSyntaxPlugin,
-          [
-            stylexBabelPlugin,
-            {
-              dev: !isProd,
-              unstable_moduleResolution,
-              importSources: stylexImports,
-              runtimeInjection: !isCompileMode,
-              ...options,
-            },
+      const result = await babel
+        .transformAsync(inputCode, {
+          babelrc: false,
+          filename: filePath,
+          plugins: [
+            /\.jsx?/.test(path.extname(id))
+              ? flowSyntaxPlugin
+              : typescriptSyntaxPlugin,
+            jsxSyntaxPlugin,
+            [
+              stylexBabelPlugin,
+              {
+                dev: !isProd,
+                unstable_moduleResolution,
+                importSources: stylexImports,
+                runtimeInjection: !isCompileMode,
+                aliases: {
+                  ...options.aliases,
+                  ...aliases,
+                },
+                ...options,
+              },
+            ],
           ],
-        ],
-      });
+        })
+        .catch((error) => {
+          if (
+            error.message.includes(
+              "Only static values are allowed inside of a stylex.create() call."
+            )
+          ) {
+            this.error(`StyleX Error: ${error.message}
+  
+💡 If you're importing StyleX tokens or styles from another file using aliases, make sure to define those in your Vite config or in the StyleX Plugin options.
+`);
+          }
+
+          throw error;
+        });
 
       if (!result) {
         return;
