@@ -152,8 +152,7 @@ export default function styleXVitePlugin({
   return {
     name: "vite-plugin-stylex",
 
-    config(config, env) {
-      isProd = env.mode === "production" || config.mode === "production";
+    config(config) {
       assetsDir = config.build?.assetsDir || "assets";
       publicBasePath = config.base || "/";
     },
@@ -161,6 +160,7 @@ export default function styleXVitePlugin({
     configResolved(config) {
       config.optimizeDeps.exclude = config.optimizeDeps.exclude || [];
       config.optimizeDeps.exclude.push("@stylexjs/open-props");
+      isProd = config.command === "build";
 
       for (const viteAlias of config.resolve.alias) {
         if (typeof viteAlias.find === "string") {
