@@ -1,5 +1,15 @@
 # vite-plugin-stylex
 
+## 0.6.0
+
+### Minor Changes
+
+- 2f0f5af: Add `libraries` configuration option
+
+### Patch Changes
+
+- f44405a: Support Remix Vite plugin stable
+
 ## 0.5.1
 
 ### Patch Changes
