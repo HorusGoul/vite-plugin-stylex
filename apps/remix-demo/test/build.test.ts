@@ -29,8 +29,8 @@ describe("build", () => {
   });
 
   test("builds without crashing", async () => {
-    process.env.ASSETS_BUILD_DIRECTORY = path.join(tempPublicDir, "build");
-    process.env.SERVER_BUILD_PATH = path.join(tempDir, "index.mjs");
+    process.env.OVERRIDE_BUILD_DIRECTORY = path.join(tempPublicDir, "build");
+    process.env.OVERRIDE_SERVER_BUILD_FILE = path.join(tempDir, "index.mjs");
 
     const result = cp.spawnSync("pnpm", ["build"], {
       cwd: VITE_ROOT,
