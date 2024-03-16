@@ -68,6 +68,7 @@ export default function styleXVitePlugin({
 }: Omit<StyleXVitePluginOptions, "dev" | "fileName"> = {}): Plugin {
   let stylexRules: Record<string, any> = {};
   let isProd = false;
+  let isSSR = false;
   let assetsDir = "assets";
   let publicBasePath = "/";
   let lastStyleXCSS: {
@@ -161,6 +162,7 @@ export default function styleXVitePlugin({
       config.optimizeDeps.exclude = config.optimizeDeps.exclude || [];
       config.optimizeDeps.exclude.push("@stylexjs/open-props");
       isProd = config.command === "build";
+      isSSR = !!config.build.ssr;
 
       for (const viteAlias of config.resolve.alias) {
         if (typeof viteAlias.find === "string") {
@@ -215,46 +217,69 @@ export default function styleXVitePlugin({
         crypto.createHash("sha1").update(contents).digest("hex").slice(0, 8);
 
       if (framework === "remix") {
-        const rootCssFile = Object.values(bundle).find(
-          (b) => b.name === "root.css"
+        const values = Object.values(bundle);
+
+        const cssFilesWithStyleX = values.filter(
+          (b): b is Rollup.OutputAsset =>
+            b.type === "asset" &&
+            b.fileName.endsWith(".css") &&
+            b.source.toString().includes(STYLEX_REPLACE_RULE)
         );
 
-        if (!rootCssFile) {
+        if (cssFilesWithStyleX.length === 0) {
           this.warn(
-            "Could not find root.css file. Did you import styles in the root of your Remix app?"
+            "Could not find any CSS files with the stylex comment. Did you import styles in the root.tsx of your Remix app?"
           );
           return;
         }
 
-        if (rootCssFile.type !== "asset") {
-          this.error("root.css file is not an asset.");
-          return;
+        for (const cssFile of cssFilesWithStyleX) {
+          const relatedJsChunk = values.find(
+            (b): b is Rollup.OutputChunk =>
+              b.type === "chunk" &&
+              !!b.viteMetadata?.importedCss.has(cssFile.fileName)
+          );
+
+          if (!relatedJsChunk) {
+            this.error(
+              `Could not find related JS chunk for CSS file ${cssFile.fileName}.`
+            );
+            return;
+          }
+
+          if (isSSR) {
+            // Remove CSS assets from the SSR build
+            relatedJsChunk.viteMetadata?.importedCss?.delete(cssFile.fileName);
+            delete bundle[cssFile.fileName];
+            return;
+          }
+
+          let css = cssFile.source.toString();
+          css = css.replace(STYLEX_REPLACE_RULE, stylexCSS);
+
+          const hash = hashContents(css);
+
+          const dir = path.dirname(cssFile.fileName);
+          const basename = path.basename(cssFile.fileName);
+          delete bundle[cssFile.fileName];
+
+          // Remix uses dashes as separator for CSS file names.
+          // If we have `layout-HASH.css` we can replace the HASH part with the new hash.
+          const newCssFileName = path.join(
+            dir,
+            basename.replace(/\-([^.]+)\.css$/, `-${hash}.css`)
+          );
+
+          this.emitFile({
+            ...cssFile,
+            fileName: newCssFileName,
+            source: css,
+          });
+
+          relatedJsChunk.viteMetadata?.importedCss?.delete(cssFile.fileName);
+          relatedJsChunk.viteMetadata?.importedCss?.add(newCssFileName);
         }
 
-        let rootCss = rootCssFile.source.toString();
-        rootCss = rootCss.replace(STYLEX_REPLACE_RULE, stylexCSS);
-
-        const hash = hashContents(rootCss);
-
-        const dir = path.dirname(rootCssFile.fileName);
-        delete bundle[rootCssFile.fileName];
-        const newCssFileName = path.join(dir, `root-${hash}.css`);
-
-        this.emitFile({
-          ...rootCssFile,
-          fileName: newCssFileName,
-          source: rootCss,
-        });
-
-        const rootJsFile = Object.values(bundle).find((b) => b.name === "root");
-
-        if (rootJsFile?.type !== "chunk") {
-          this.error("Could not find root chunk.");
-          return;
-        }
-
-        rootJsFile.viteMetadata?.importedCss?.delete(rootCssFile.fileName);
-        rootJsFile.viteMetadata?.importedCss?.add(newCssFileName);
         return;
       }
 
