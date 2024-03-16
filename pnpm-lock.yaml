@@ -63,6 +63,9 @@ importers:
       '@remix-run/serve':
         specifier: ^2.8.1
         version: 2.8.1(typescript@5.2.2)
+      '@stylexjs/open-props':
+        specifier: ^0.3.0
+        version: 0.3.0
       '@stylexjs/stylex':
         specifier: ^0.5.1
         version: 0.5.1
