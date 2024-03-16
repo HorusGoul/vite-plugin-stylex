@@ -13,7 +13,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as cp from "node:child_process";
 
-describe.skip("build", () => {
+describe("build", () => {
   let tempDir: string;
 
   before(async () => {
@@ -88,6 +88,24 @@ describe("build output", () => {
     assert.ok(
       stylexCss.includes(expectedCss),
       `root stylesheet should contain the expected stylex extracted styles: ${expectedCss}`
+    );
+  });
+
+  test("stylex stylesheet contains styles from @stylexjs/open-props package", async () => {
+    const files = await fs.readdir(publicAssetsDir);
+    const rootStylesheetFile = files.find(
+      (file) => file.startsWith("root") && file.endsWith(".css")
+    );
+    const stylexCss = await fs.readFile(
+      path.join(publicAssetsDir, rootStylesheetFile!),
+      "utf-8"
+    );
+
+    // Corresponds with color.blue1 from @stylexjs/open-props
+    const expectedCss = `#d0ebff`;
+    assert.ok(
+      stylexCss.includes(expectedCss),
+      `stylex stylesheet should contain the expected styles: ${expectedCss}`
     );
   });
 
