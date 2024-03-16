@@ -55,6 +55,15 @@ interface StyleXVitePluginOptions
   aliases?: {
     [alias: string]: string[];
   };
+
+  /**
+   * Define external modules that export StyleX styles.
+   *
+   * This is useful when you want to pull UI tokens or components from a separate package, like a Design System.
+   *
+   * @default ["@stylexjs/open-props"]
+   */
+  libraries?: string[];
 }
 
 const STYLEX_REPLACE_RULE = "@stylex stylesheet;";
@@ -64,8 +73,11 @@ type Framework = "remix" | "sveltekit" | "qwik" | "none";
 export default function styleXVitePlugin({
   unstable_moduleResolution = { type: "commonJS", rootDir: process.cwd() },
   stylexImports = ["@stylexjs/stylex"],
+  libraries: inputLibraries = [],
   ...options
 }: Omit<StyleXVitePluginOptions, "dev" | "fileName"> = {}): Plugin {
+  const libraries = ["@stylexjs/open-props", ...inputLibraries];
+
   let stylexRules: Record<string, any> = {};
   let isProd = false;
   let isSSR = false;
@@ -159,10 +171,18 @@ export default function styleXVitePlugin({
     },
 
     configResolved(config) {
-      config.optimizeDeps.exclude = config.optimizeDeps.exclude || [];
-      config.optimizeDeps.exclude.push("@stylexjs/open-props");
       isProd = config.command === "build";
       isSSR = !!config.build.ssr;
+
+      config.optimizeDeps.exclude = config.optimizeDeps.exclude || [];
+      config.ssr.optimizeDeps.exclude = config.ssr.optimizeDeps.exclude || [];
+      config.ssr.noExternal = Array.isArray(config.ssr.noExternal)
+        ? config.ssr.noExternal
+        : [];
+
+      config.optimizeDeps.exclude.push(...libraries);
+      config.ssr.optimizeDeps.exclude.push(...libraries);
+      config.ssr.noExternal.push(...libraries);
 
       for (const viteAlias of config.resolve.alias) {
         if (typeof viteAlias.find === "string") {

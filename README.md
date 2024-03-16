@@ -115,19 +115,20 @@ Open the `src/global.css` file and add the following:
 
 It's possible that other frameworks don't work out of the box. If you find that this is the case, please open an issue.
 
-## Working with external StyleX files
+## Working with external StyleX files and libraries
 
-If you want to use StyleX styles from another package, we need to tell Vite to not optimize the dependency so that the plugin can process them. To do this, we can use the `optimizeDeps` option:
+If you want to use StyleX styles from another package, we need to tell Vite to not optimize the dependency so that the plugin can process them. To do this, the plugin provides a `libraries` option that you can use to provide a list of packages that provide StyleX styles.
 
 ```ts
 import styleX from "vite-plugin-stylex";
 
 export default defineConfig({
-  plugins: [react(), styleX()],
-
-  optimizeDeps: {
-    exclude: ["cool-stylex-package"],
-  },
+  plugins: [
+    react(),
+    styleX({
+      libraries: ["cool-stylex-package"],
+    }),
+  ],
 });
 ```
 
