@@ -7,13 +7,12 @@ import styleX from "vite-plugin-stylex";
 installGlobals();
 
 const OVERRIDE_BUILD_DIRECTORY = process.env.OVERRIDE_BUILD_DIRECTORY;
-const OVERRIDE_SERVER_BUILD_FILE = process.env.OVERRIDE_SERVER_BUILD_FILE;
 
 export default defineConfig({
   plugins: [
     remix({
       buildDirectory: OVERRIDE_BUILD_DIRECTORY || "build",
-      serverBuildFile: OVERRIDE_SERVER_BUILD_FILE || "index.mjs",
+      serverBuildFile: "index.mjs",
     }),
     tsconfigPaths(),
     styleX() as Plugin,
