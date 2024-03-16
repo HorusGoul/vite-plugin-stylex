@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [
     remix({
       buildDirectory: OVERRIDE_BUILD_DIRECTORY || "build",
-      serverBuildFile: OVERRIDE_SERVER_BUILD_FILE || "build/server/index.mjs",
+      serverBuildFile: OVERRIDE_SERVER_BUILD_FILE || "index.mjs",
     }),
     tsconfigPaths(),
     styleX() as Plugin,
