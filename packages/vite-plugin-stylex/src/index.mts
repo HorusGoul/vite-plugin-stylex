@@ -36,6 +36,7 @@ interface StyleXVitePluginOptions
       | "classNamePrefix"
       | "unstable_moduleResolution"
       | "useRemForFontSize"
+      | "importSources"
     >
   > {
   stylexImports?: string[];
@@ -161,6 +162,25 @@ export default function styleXVitePlugin({
 
     warned = true;
   }
+
+  const styleXRelatedModules = new Set([...stylexImports]);
+
+  if (options.importSources) {
+    for (const source of options.importSources) {
+      if (typeof source === "string") {
+        styleXRelatedModules.add(source);
+      } else {
+        styleXRelatedModules.add(source.from);
+      }
+    }
+  }
+
+  const hasReactStrictDom = styleXRelatedModules.has("react-strict-dom");
+
+  const babelReactStrictDomPlugin = hasReactStrictDom
+    ? // @ts-ignore
+      import("react-strict-dom/babel")
+    : false;
 
   return {
     name: "vite-plugin-stylex",
@@ -393,7 +413,11 @@ export default function styleXVitePlugin({
         return inputCode.replace(STYLEX_REPLACE_RULE, compileStyleX());
       }
 
-      if (!stylexImports.some((importName) => inputCode.includes(importName))) {
+      if (
+        !Array.from(styleXRelatedModules).some((importName) =>
+          inputCode.includes(importName)
+        )
+      ) {
         return;
       }
 
@@ -413,6 +437,13 @@ export default function styleXVitePlugin({
               ? flowSyntaxPlugin
               : typescriptSyntaxPlugin,
             jsxSyntaxPlugin,
+            babelReactStrictDomPlugin
+              ? await babelReactStrictDomPlugin.catch(() => {
+                  this.error(
+                    `Could not load the react-strict-dom babel plugin. Make sure you have the latest version of react-strict-dom installed.`
+                  );
+                })
+              : null,
             [
               stylexBabelPlugin,
               {
@@ -426,7 +457,7 @@ export default function styleXVitePlugin({
                 },
                 ...options,
               },
-            ],
+            ].filter(Boolean),
           ],
         })
         .catch((error) => {
