@@ -36,8 +36,12 @@ interface StyleXVitePluginOptions
       | "classNamePrefix"
       | "unstable_moduleResolution"
       | "useRemForFontSize"
+      | "importSources"
     >
   > {
+  /**
+   * @deprecated Use `importSources` instead. You should be able to just replace `stylexImports` with `importSources` in your config.
+   */
   stylexImports?: string[];
   /**
    * A map of aliases to their respective paths.
@@ -160,6 +164,31 @@ export default function styleXVitePlugin({
     }
 
     warned = true;
+  }
+
+  const styleXRelatedModules = new Set([...stylexImports]);
+  const importSourcesSet = new Set<StyleXOptions["importSources"][number]>([
+    ...stylexImports,
+  ]);
+
+  if (options.importSources) {
+    for (const source of options.importSources) {
+      if (typeof source === "string") {
+        styleXRelatedModules.add(source);
+      } else {
+        styleXRelatedModules.add(source.from);
+      }
+
+      importSourcesSet.add(source);
+    }
+  }
+
+  options.importSources = Array.from(importSourcesSet);
+
+  const hasReactStrictDom = styleXRelatedModules.has("react-strict-dom");
+
+  if (hasReactStrictDom) {
+    libraries.push("react-strict-dom");
   }
 
   return {
@@ -393,7 +422,13 @@ export default function styleXVitePlugin({
         return inputCode.replace(STYLEX_REPLACE_RULE, compileStyleX());
       }
 
-      if (!stylexImports.some((importName) => inputCode.includes(importName))) {
+      if (
+        !Array.from(styleXRelatedModules).some(
+          (importName) =>
+            inputCode.includes(`"${importName}"`) ||
+            inputCode.includes(`'${importName}'`)
+        )
+      ) {
         return;
       }
 
@@ -413,12 +448,12 @@ export default function styleXVitePlugin({
               ? flowSyntaxPlugin
               : typescriptSyntaxPlugin,
             jsxSyntaxPlugin,
+            hasReactStrictDom ? require("react-strict-dom/babel") : null,
             [
               stylexBabelPlugin,
               {
                 dev: !isProd,
                 unstable_moduleResolution,
-                importSources: stylexImports,
                 runtimeInjection: !isCompileMode,
                 aliases: {
                   ...options.aliases,
@@ -427,7 +462,7 @@ export default function styleXVitePlugin({
                 ...options,
               },
             ],
-          ],
+          ].filter((plugin) => plugin !== null),
         })
         .catch((error) => {
           if (
