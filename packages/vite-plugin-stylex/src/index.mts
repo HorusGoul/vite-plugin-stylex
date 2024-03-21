@@ -40,7 +40,7 @@ interface StyleXVitePluginOptions
     >
   > {
   /**
-   * @deprecated Use `importSources` instead.
+   * @deprecated Use `importSources` instead. You should be able to just replace `stylexImports` with `importSources` in your config.
    */
   stylexImports?: string[];
   /**
