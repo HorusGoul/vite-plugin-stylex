@@ -1,5 +1,5 @@
-import * as stylex from "@stylexjs/stylex";
+import { css } from "react-strict-dom";
 
-export const aliasedTokens = stylex.defineVars({
+export const aliasedTokens = css.defineVars({
   primaryOutlineColor: "blue",
 });

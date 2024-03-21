@@ -5,7 +5,12 @@ import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), styleX()],
+  plugins: [
+    react(),
+    styleX({
+      importSources: [{ from: "react-strict-dom", as: "css" }],
+    }),
+  ],
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),

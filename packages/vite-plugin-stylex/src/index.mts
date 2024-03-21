@@ -39,6 +39,9 @@ interface StyleXVitePluginOptions
       | "importSources"
     >
   > {
+  /**
+   * @deprecated Use `importSources` instead.
+   */
   stylexImports?: string[];
   /**
    * A map of aliases to their respective paths.
@@ -164,6 +167,9 @@ export default function styleXVitePlugin({
   }
 
   const styleXRelatedModules = new Set([...stylexImports]);
+  const importSourcesSet = new Set<StyleXOptions["importSources"][number]>([
+    ...stylexImports,
+  ]);
 
   if (options.importSources) {
     for (const source of options.importSources) {
@@ -172,15 +178,18 @@ export default function styleXVitePlugin({
       } else {
         styleXRelatedModules.add(source.from);
       }
+
+      importSourcesSet.add(source);
     }
   }
 
+  options.importSources = Array.from(importSourcesSet);
+
   const hasReactStrictDom = styleXRelatedModules.has("react-strict-dom");
 
-  const babelReactStrictDomPlugin = hasReactStrictDom
-    ? // @ts-ignore
-      import("react-strict-dom/babel")
-    : false;
+  if (hasReactStrictDom) {
+    libraries.push("react-strict-dom");
+  }
 
   return {
     name: "vite-plugin-stylex",
@@ -414,8 +423,10 @@ export default function styleXVitePlugin({
       }
 
       if (
-        !Array.from(styleXRelatedModules).some((importName) =>
-          inputCode.includes(importName)
+        !Array.from(styleXRelatedModules).some(
+          (importName) =>
+            inputCode.includes(`"${importName}"`) ||
+            inputCode.includes(`'${importName}'`)
         )
       ) {
         return;
@@ -437,19 +448,12 @@ export default function styleXVitePlugin({
               ? flowSyntaxPlugin
               : typescriptSyntaxPlugin,
             jsxSyntaxPlugin,
-            babelReactStrictDomPlugin
-              ? await babelReactStrictDomPlugin.catch(() => {
-                  this.error(
-                    `Could not load the react-strict-dom babel plugin. Make sure you have the latest version of react-strict-dom installed.`
-                  );
-                })
-              : null,
+            hasReactStrictDom ? require("react-strict-dom/babel") : null,
             [
               stylexBabelPlugin,
               {
                 dev: !isProd,
                 unstable_moduleResolution,
-                importSources: stylexImports,
                 runtimeInjection: !isCompileMode,
                 aliases: {
                   ...options.aliases,
@@ -457,8 +461,8 @@ export default function styleXVitePlugin({
                 },
                 ...options,
               },
-            ].filter(Boolean),
-          ],
+            ],
+          ].filter((plugin) => plugin !== null),
         })
         .catch((error) => {
           if (

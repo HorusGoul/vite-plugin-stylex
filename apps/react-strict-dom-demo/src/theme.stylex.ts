@@ -1,5 +1,5 @@
-import * as stylex from "@stylexjs/stylex";
+import { css } from "react-strict-dom";
 
-export const tokens = stylex.defineVars({
+export const tokens = css.defineVars({
   primaryTextColor: "#000",
 });

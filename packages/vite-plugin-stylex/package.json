@@ -46,5 +46,10 @@
   "peerDependencies": {
     "@stylexjs/stylex": "^0.5.1",
     "vite": "^4 || ^5"
+  },
+  "peerDependenciesMeta": {
+    "react-strict-dom": {
+      "optional": true
+    }
   }
 }

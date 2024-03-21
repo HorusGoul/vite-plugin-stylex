@@ -1,17 +1,17 @@
-import * as stylex from "@stylexjs/stylex";
+import { css, html } from "react-strict-dom";
 import { tokens } from "./theme.stylex";
 import { aliasedTokens } from "@/aliased-import-theme.stylex";
 import { colors } from "@stylexjs/open-props/lib/colors.stylex";
 
 export default function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div {...stylex.props(styles.root)} data-testid="card">
+    <html.div style={[styles.root]} data-testid="card">
       {children}
-    </div>
+    </html.div>
   );
 }
 
-const styles = stylex.create({
+const styles = css.create({
   root: {
     backgroundColor: "white",
     borderRadius: 8,
