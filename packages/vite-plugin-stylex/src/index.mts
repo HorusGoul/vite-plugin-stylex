@@ -191,6 +191,9 @@ export default function styleXVitePlugin({
     libraries.push("react-strict-dom");
   }
 
+  let viteCssPlugin: Plugin;
+  let viteCssPostPlugin: Plugin;
+
   return {
     name: "vite-plugin-stylex",
 
@@ -243,6 +246,14 @@ export default function styleXVitePlugin({
           framework = "qwik";
           break;
         }
+
+        if (name === "vite:css") {
+          viteCssPlugin = plugin;
+        }
+
+        if (name === "vite:css-post") {
+          viteCssPostPlugin = plugin;
+        }
       }
     },
 
@@ -259,8 +270,50 @@ export default function styleXVitePlugin({
       return false;
     },
 
-    generateBundle(_, bundle) {
-      const stylexCSS = compileStyleX();
+    async generateBundle(_, bundle) {
+      let stylexCSS = compileStyleX();
+
+      if (
+        typeof viteCssPlugin.transform === "function" &&
+        typeof viteCssPostPlugin.transform === "function"
+      ) {
+        const cssResult = await viteCssPlugin.transform?.call(
+          {} as Rollup.TransformPluginContext,
+          stylexCSS,
+          "stylex.css"
+        );
+        const cssResultCode =
+          typeof cssResult === "string"
+            ? cssResult
+            : !!cssResult
+            ? cssResult.code
+            : null;
+
+        if (cssResultCode) {
+          const cssPostResult = await viteCssPostPlugin.transform?.call(
+            {} as Rollup.TransformPluginContext,
+            cssResultCode,
+            "stylex.css?used"
+          );
+
+          const cssPostResultCode =
+            typeof cssPostResult === "string"
+              ? cssPostResult
+              : !!cssPostResult
+              ? cssPostResult.code
+              : null;
+
+          try {
+            const css = cssPostResultCode
+              ? JSON.parse(
+                  cssPostResultCode.replace("export default", "").trim()
+                ).trim()
+              : null;
+
+            stylexCSS = css;
+          } catch {}
+        }
+      }
 
       const hashContents = (contents: string) =>
         crypto.createHash("sha1").update(contents).digest("hex").slice(0, 8);
