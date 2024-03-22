@@ -83,7 +83,7 @@ describe("build output", () => {
       path.join(publicAssetsDir, rootStylesheetFile!),
       "utf-8"
     );
-    const expectedCss = `background-color:white`;
+    const expectedCss = `background-color:#fff`;
 
     assert.ok(
       stylexCss.includes(expectedCss),
