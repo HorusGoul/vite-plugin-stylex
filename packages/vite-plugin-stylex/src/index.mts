@@ -301,7 +301,7 @@ export default function styleXVitePlugin({
           const cssPostResult = await viteCssPostPlugin.transform?.call(
             {} as Rollup.TransformPluginContext,
             cssResultCode,
-            "stylex.css?inline-css"
+            "stylex.css?inline-css&used"
           );
 
           const cssPostResultCode =
