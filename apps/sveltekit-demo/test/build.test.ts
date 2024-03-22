@@ -33,7 +33,7 @@ describe("build", () => {
         "utf-8"
       );
 
-      if (!content.includes("background-color:white")) {
+      if (!content.includes("background-color:#fff")) {
         assert.fail(
           "all output CSS files should contain the expected stylex extracted styles"
         );

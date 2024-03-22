@@ -54,7 +54,7 @@ describe("build output", () => {
       path.join(publicAssetsDir, stylexFile!),
       "utf-8"
     );
-    const expectedCss = `background-color:white`;
+    const expectedCss = `background-color:#fff`;
 
     assert.ok(
       stylexCss.includes(expectedCss),
