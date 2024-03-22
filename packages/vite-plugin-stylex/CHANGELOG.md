@@ -1,5 +1,13 @@
 # vite-plugin-stylex
 
+## 0.8.0
+
+### Minor Changes
+
+- 41bc4f9: Apply Vite CSS processing and post-processing
+
+  This enables minification and other optimizations for CSS files.
+
 ## 0.7.0
 
 ### Minor Changes
