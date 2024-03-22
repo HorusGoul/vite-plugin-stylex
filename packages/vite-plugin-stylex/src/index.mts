@@ -232,6 +232,22 @@ export default function styleXVitePlugin({
 
         const name = plugin.name;
 
+        if (name === "vite:css") {
+          viteCssPlugin = plugin;
+        }
+
+        if (name === "vite:css-post") {
+          viteCssPostPlugin = plugin;
+        }
+      }
+
+      for (const plugin of config.plugins) {
+        if (!plugin || !("name" in plugin)) {
+          continue;
+        }
+
+        const name = plugin.name;
+
         if (name.includes("remix")) {
           framework = "remix";
           break;
@@ -245,14 +261,6 @@ export default function styleXVitePlugin({
         if (name.includes("qwik")) {
           framework = "qwik";
           break;
-        }
-
-        if (name === "vite:css") {
-          viteCssPlugin = plugin;
-        }
-
-        if (name === "vite:css-post") {
-          viteCssPostPlugin = plugin;
         }
       }
     },
@@ -293,7 +301,7 @@ export default function styleXVitePlugin({
           const cssPostResult = await viteCssPostPlugin.transform?.call(
             {} as Rollup.TransformPluginContext,
             cssResultCode,
-            "stylex.css?used"
+            "stylex.css?inline-css"
           );
 
           const cssPostResultCode =
