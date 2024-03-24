@@ -62,22 +62,22 @@ describe("build output", () => {
     await fs.rm(tempDir, { recursive: true });
   });
 
-  test("built assets should contain a stylesheet for the root component", async () => {
+  test("built assets should contain the stylex stylesheet", async () => {
     const files = await fs.readdir(publicAssetsDir);
     const rootStylesheetFile = files.some(
-      (file) => file.startsWith("root") && file.endsWith(".css")
+      (file) => file.startsWith("stylex-") && file.endsWith(".css")
     );
 
     assert.ok(
       rootStylesheetFile,
-      "a stylesheet file for the root component should exist in the build output"
+      "the imported stylesheet should exist in the build output"
     );
   });
 
-  test("root stylesheet contains the stylex styles", async () => {
+  test("stylex stylesheet contains the stylex styles", async () => {
     const files = await fs.readdir(publicAssetsDir);
     const rootStylesheetFile = files.find(
-      (file) => file.startsWith("root") && file.endsWith(".css")
+      (file) => file.startsWith("stylex-") && file.endsWith(".css")
     );
     const stylexCss = await fs.readFile(
       path.join(publicAssetsDir, rootStylesheetFile!),
@@ -94,7 +94,7 @@ describe("build output", () => {
   test("stylex stylesheet contains styles from @stylexjs/open-props package", async () => {
     const files = await fs.readdir(publicAssetsDir);
     const rootStylesheetFile = files.find(
-      (file) => file.startsWith("root") && file.endsWith(".css")
+      (file) => file.startsWith("stylex-") && file.endsWith(".css")
     );
     const stylexCss = await fs.readFile(
       path.join(publicAssetsDir, rootStylesheetFile!),
