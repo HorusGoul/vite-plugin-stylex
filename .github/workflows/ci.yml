@@ -65,7 +65,17 @@ jobs:
     needs: [check]
     strategy:
       matrix:
-        demo: [vite, remix, sveltekit, storybook, vue, qwik, react-strict-dom]
+        demo:
+          [
+            vite,
+            remix,
+            sveltekit,
+            storybook,
+            vue,
+            qwik,
+            react-strict-dom,
+            remix-css-url,
+          ]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
