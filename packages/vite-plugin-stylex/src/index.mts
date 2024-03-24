@@ -344,24 +344,26 @@ export default function styleXVitePlugin({
         }
 
         for (const cssFile of cssFilesWithStyleX) {
-          const relatedJsChunk = values.find(
+          let relatedJsChunk = values.find(
             (b): b is Rollup.OutputChunk =>
               b.type === "chunk" &&
               !!b.viteMetadata?.importedCss.has(cssFile.fileName)
           );
+          let shouldReplaceAssetUrl = false;
 
           if (!relatedJsChunk) {
-            this.error(
-              `Could not find related JS chunk for CSS file ${cssFile.fileName}.`
+            relatedJsChunk = values.find(
+              (b): b is Rollup.OutputChunk =>
+                b.type === "chunk" && b.code.includes(cssFile.fileName)
             );
-            return;
-          }
 
-          if (isSSR) {
-            // Remove CSS assets from the SSR build
-            relatedJsChunk.viteMetadata?.importedCss?.delete(cssFile.fileName);
-            delete bundle[cssFile.fileName];
-            return;
+            if (!relatedJsChunk) {
+              this.error(
+                `Could not find related JS chunk for CSS file ${cssFile.fileName}.`
+              );
+            }
+
+            shouldReplaceAssetUrl = true;
           }
 
           let css = cssFile.source.toString();
@@ -380,14 +382,39 @@ export default function styleXVitePlugin({
             basename.replace(/\-([^.]+)\.css$/, `-${hash}.css`)
           );
 
-          this.emitFile({
-            ...cssFile,
-            fileName: newCssFileName,
-            source: css,
-          });
+          if (!isSSR) {
+            // Remove CSS assets from the SSR build
+            relatedJsChunk?.viteMetadata?.importedCss?.delete(cssFile.fileName);
+            this.emitFile({
+              ...cssFile,
+              fileName: newCssFileName,
+              source: css,
+            });
+          }
 
-          relatedJsChunk.viteMetadata?.importedCss?.delete(cssFile.fileName);
-          relatedJsChunk.viteMetadata?.importedCss?.add(newCssFileName);
+          if (shouldReplaceAssetUrl) {
+            const newJsChunkCode = relatedJsChunk.code.replaceAll(
+              cssFile.fileName,
+              newCssFileName
+            );
+            const hash = hashContents(newJsChunkCode);
+            const dir = path.dirname(relatedJsChunk.fileName);
+            const basename = path.basename(relatedJsChunk.fileName);
+            const newJsChunkFileName = path.join(
+              dir,
+              basename.replace(/\-([^.]+)\.js$/, `-${hash}.js`)
+            );
+
+            delete bundle[relatedJsChunk.fileName];
+            bundle[newJsChunkFileName] = {
+              ...relatedJsChunk,
+              fileName: newJsChunkFileName,
+              code: newJsChunkCode,
+            };
+          } else {
+            relatedJsChunk?.viteMetadata?.importedCss?.delete(cssFile.fileName);
+            relatedJsChunk?.viteMetadata?.importedCss?.add(newCssFileName);
+          }
         }
 
         return;
