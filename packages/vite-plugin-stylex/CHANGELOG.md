@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.8.1
+
+### Patch Changes
+
+- 46c32cd: ?url import fix for Remix
+
 ## 0.8.0
 
 ### Minor Changes
