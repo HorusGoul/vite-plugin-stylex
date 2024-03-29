@@ -17,4 +17,10 @@ export default defineConfig({
     tsconfigPaths(),
     styleX() as Plugin,
   ],
+  css: {
+    transformer: "lightningcss",
+  },
+  build: {
+    cssMinify: "lightningcss",
+  },
 });

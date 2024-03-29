@@ -286,7 +286,7 @@ export default function styleXVitePlugin({
         typeof viteCssPostPlugin.transform === "function"
       ) {
         const cssResult = await viteCssPlugin.transform?.call(
-          {} as Rollup.TransformPluginContext,
+          this as Rollup.TransformPluginContext,
           stylexCSS,
           "stylex.css"
         );
@@ -299,7 +299,7 @@ export default function styleXVitePlugin({
 
         if (cssResultCode) {
           const cssPostResult = await viteCssPostPlugin.transform?.call(
-            {} as Rollup.TransformPluginContext,
+            this as Rollup.TransformPluginContext,
             cssResultCode,
             "stylex.css?inline-css&used"
           );
