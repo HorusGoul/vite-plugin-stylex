@@ -233,7 +233,8 @@ export default function styleXVitePlugin({
 
   return [
     {
-      name: "vite-plugin-stylex",
+      name: "vite-plugin-stylex:pre",
+      enforce: "pre",
 
       configResolved(config) {
         isProd = config.command === "build";
@@ -278,11 +279,6 @@ export default function styleXVitePlugin({
         server = _server;
       },
 
-      shouldTransformCachedModule({ id, meta }) {
-        stylexRules[id] = meta.stylex;
-        return false;
-      },
-
       async transform(inputCode, id, { ssr: isSSR = false } = {}) {
         if (/\.css/.test(id) && inputCode.includes(STYLEX_REPLACE_RULE)) {
           modulesToInvalidate.set(id, inputCode);
@@ -295,7 +291,17 @@ export default function styleXVitePlugin({
             return inputCode.replace(STYLEX_REPLACE_RULE, compileStyleX());
           }
         }
+      },
+    },
+    {
+      name: "vite-plugin-stylex",
 
+      shouldTransformCachedModule({ id, meta }) {
+        stylexRules[id] = meta.stylex;
+        return false;
+      },
+
+      async transform(inputCode, id) {
         if (
           !Array.from(styleXRelatedModules).some(
             (importName) =>
