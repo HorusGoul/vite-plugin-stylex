@@ -28,7 +28,7 @@ describe("build output", () => {
   let publicAssetsDir: string;
 
   before(async () => {
-    publicAssetsDir = path.join(VITE_ROOT, "dist", "assets");
+    publicAssetsDir = path.join(VITE_ROOT, "dist", "build");
 
     cp.spawnSync("pnpm", ["build"], {
       cwd: VITE_ROOT,
