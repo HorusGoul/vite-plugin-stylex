@@ -23,7 +23,7 @@
     "@vitejs/plugin-react": "^4.2.0",
     "tsx": "^4.6.2",
     "typescript": "^5.2.2",
-    "vite": "^4.5.1",
+    "vite": "^5.2.7",
     "vite-plugin-stylex": "workspace:*"
   }
 }

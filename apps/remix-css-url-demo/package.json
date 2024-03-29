@@ -29,7 +29,7 @@
     "eslint": "^8.38.0",
     "tsx": "^4.6.2",
     "typescript": "^5.1.6",
-    "vite": "^5.1.6",
+    "vite": "^5.2.7",
     "vite-plugin-stylex": "workspace:*",
     "vite-tsconfig-paths": "^4.3.2"
   },
