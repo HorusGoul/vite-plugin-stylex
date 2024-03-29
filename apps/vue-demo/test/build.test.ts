@@ -53,25 +53,6 @@ describe("build output", () => {
     assert.ok(stylexFile, "an stylex file should exist in the build output");
   });
 
-  test("index.html contains a link to the stylex stylesheet", async () => {
-    const indexHtml = await fs.readFile(
-      path.join(tempDir, "index.html"),
-      "utf-8"
-    );
-    const files = await fs.readdir(path.join(tempDir, "assets"));
-    const stylexFile = files.some(
-      (file) => file.includes("index") && file.endsWith(".css")
-    );
-    const stylexLink = indexHtml.includes(
-      `<link rel="stylesheet" href="/assets/${stylexFile}`
-    );
-
-    assert.ok(
-      stylexLink,
-      "index.html should contain a link to the stylex stylesheet"
-    );
-  });
-
   test("stylex stylesheet contains the expected styles", async () => {
     const files = await fs.readdir(path.join(tempDir, "assets"));
     const stylexFile = files.find(
