@@ -19,9 +19,14 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.mjs"
+      "types": "./dist/experimental.d.mts",
+      "import": "./dist/experimental.mjs",
+      "default": "./dist/experimental.mjs"
+    },
+    "./experimental": {
+      "types": "./dist/experimental.d.mts",
+      "import": "./dist/experimental.mjs",
+      "default": "./dist/experimental.mjs"
     }
   },
   "scripts": {
@@ -33,7 +38,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/node": "20",
     "typescript": "5.2.2",
-    "vite": "^4"
+    "vite": "^5.2.7"
   },
   "dependencies": {
     "@babel/core": "^7.23.9",
@@ -45,7 +50,7 @@
   },
   "peerDependencies": {
     "@stylexjs/stylex": "^0.5.1",
-    "vite": "^4 || ^5"
+    "vite": "^5.2.7"
   },
   "peerDependenciesMeta": {
     "react-strict-dom": {
