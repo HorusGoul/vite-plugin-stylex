@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.8.2
+
+### Patch Changes
+
+- a5b5ae3: Fixes building projects that include assets and use LightningCSS. Fixes #60.
+
 ## 0.8.1
 
 ### Patch Changes
