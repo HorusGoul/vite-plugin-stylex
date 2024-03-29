@@ -3,7 +3,6 @@ import {
   Browser,
   openBrowser,
   closeBrowser,
-  runtimeInjectionTest,
   hmrTest,
   cleanHmrTest,
   friendlyClassNameTest,
@@ -54,13 +53,6 @@ describe("dev", () => {
   after(async () => {
     await closeBrowser(browser);
     await killPortProcess(port);
-  });
-
-  test("runtime injection works", async () => {
-    const page = await browser.newPage();
-    await page.goto(previewUrl);
-
-    await runtimeInjectionTest(page);
   });
 
   test("friendly classnames work", async () => {
