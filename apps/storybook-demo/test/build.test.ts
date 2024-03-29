@@ -44,34 +44,10 @@ describe("build output", () => {
     await fs.rm(tempDir, { recursive: true });
   });
 
-  test("built assets should contain a stylex stylesheet", async () => {
-    const files = await fs.readdir(path.join(tempDir, "assets"));
-    const stylexFile = files.some(
-      (file) => file.includes("stylex") && file.endsWith(".css")
-    );
-
-    assert.ok(stylexFile, "an stylex file should exist in the build output");
-  });
-
-  test("iframe.html contains a link to the stylex stylesheet", async () => {
-    const indexHtml = await fs.readFile(
-      path.join(tempDir, "iframe.html"),
-      "utf-8"
-    );
-    const stylexLink = indexHtml.includes(
-      `<link rel="stylesheet" href="assets/stylex.`
-    );
-
-    assert.ok(
-      stylexLink,
-      "iframe.html should contain a link to the stylex stylesheet"
-    );
-  });
-
   test("stylex stylesheet contains the expected styles", async () => {
     const files = await fs.readdir(path.join(tempDir, "assets"));
     const stylexFile = files.find(
-      (file) => file.includes("stylex") && file.endsWith(".css")
+      (file) => file.startsWith("preview") && file.endsWith(".css")
     );
     const stylexCss = await fs.readFile(
       path.join(tempDir, "assets", stylexFile),

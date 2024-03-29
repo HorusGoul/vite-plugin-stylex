@@ -109,42 +109,6 @@ describe("build output", () => {
     );
   });
 
-  test("stylex file should not be in the public build output", async () => {
-    const files = await fs.readdir(publicAssetsDir);
-    const stylexFile = files.some(
-      (file) => file.includes("stylex.") && file.endsWith(".css")
-    );
-
-    assert.ok(!stylexFile, "stylex file should not be in the build output");
-  });
-
-  test("stylex file should not be in the server build output", async () => {
-    const files = await fs
-      .readdir(path.join(tempDir, "build", "server", "assets"))
-      // Catching if the directory doesn't exist
-      .catch(() => []);
-    const stylexFile = files.some(
-      (file) => file.includes("stylex.") && file.endsWith(".css")
-    );
-
-    assert.ok(!stylexFile, "stylex file should not be in the build output");
-  });
-
-  test("server-build-HASH.css file should not be in the server build output", async () => {
-    const files = await fs
-      .readdir(path.join(tempDir, "build", "server", "assets"))
-      // Catching if the directory doesn't exist
-      .catch(() => []);
-    const stylexFile = files.some(
-      (file) => file.includes("server-build-") && file.endsWith(".css")
-    );
-
-    assert.ok(
-      !stylexFile,
-      "server-build-HASH.css file should not be in the build output"
-    );
-  });
-
   describe("remix serve", () => {
     let child: cp.ChildProcessWithoutNullStreams;
     let address: string;

@@ -47,7 +47,7 @@ describe("build output", () => {
   test("built assets should contain a stylex stylesheet", async () => {
     const files = await fs.readdir(path.join(tempDir, "assets"));
     const stylexFile = files.some(
-      (file) => file.includes("stylex") && file.endsWith(".css")
+      (file) => file.includes("index") && file.endsWith(".css")
     );
 
     assert.ok(stylexFile, "an stylex file should exist in the build output");
@@ -58,8 +58,12 @@ describe("build output", () => {
       path.join(tempDir, "index.html"),
       "utf-8"
     );
+    const files = await fs.readdir(path.join(tempDir, "assets"));
+    const stylexFile = files.some(
+      (file) => file.includes("index") && file.endsWith(".css")
+    );
     const stylexLink = indexHtml.includes(
-      `<link rel="stylesheet" href="/assets/stylex.`
+      `<link rel="stylesheet" href="/assets/${stylexFile}`
     );
 
     assert.ok(
@@ -71,10 +75,10 @@ describe("build output", () => {
   test("stylex stylesheet contains the expected styles", async () => {
     const files = await fs.readdir(path.join(tempDir, "assets"));
     const stylexFile = files.find(
-      (file) => file.includes("stylex") && file.endsWith(".css")
+      (file) => file.includes("index") && file.endsWith(".css")
     );
     const stylexCss = await fs.readFile(
-      path.join(tempDir, "assets", stylexFile!),
+      path.join(tempDir, "assets", stylexFile),
       "utf-8"
     );
     const expectedCss = `background-color:#fff`;

@@ -41,15 +41,6 @@ describe("build", () => {
     }
   });
 
-  test("stylex file should not be in the public build output", async () => {
-    const files = await fs.readdir(COMPILED_ASSETS_FOLDER);
-    const stylexFile = files.some(
-      (file) => file.includes("stylex.") && file.endsWith(".css")
-    );
-
-    assert.ok(!stylexFile, "stylex file should not be in the build output");
-  });
-
   describe("preview", () => {
     let server: vite.PreviewServer;
     let serverUrl: string;

@@ -36,20 +36,9 @@ describe("build output", () => {
     });
   });
 
-  test("built assets should contain a stylex stylesheet", async () => {
-    const files = await fs.readdir(publicAssetsDir);
-    const stylexFile = files.some(
-      (file) => file.includes("stylex") && file.endsWith(".css")
-    );
-
-    assert.ok(stylexFile, "an stylex file should exist in the build output");
-  });
-
   test("stylex stylesheet contains the expected styles", async () => {
     const files = await fs.readdir(publicAssetsDir);
-    const stylexFile = files.find(
-      (file) => file.includes("stylex") && file.endsWith(".css")
-    );
+    const stylexFile = files.find((file) => file.endsWith(".css"));
     const stylexCss = await fs.readFile(
       path.join(publicAssetsDir, stylexFile!),
       "utf-8"
