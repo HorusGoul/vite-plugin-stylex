@@ -1,0 +1,19 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "react-strict-dom-demo": "0.0.0",
+    "storybook-demo": "0.0.0",
+    "sveltekit-demo": "0.0.1",
+    "vite-demo": "0.0.0",
+    "vue-demo": "0.0.0",
+    "@internal/test-utils": "1.0.0",
+    "vite-plugin-stylex": "0.8.2",
+    "qwik-demo": "0.0.0",
+    "remix-css-url-demo": "0.0.0",
+    "remix-demo": "0.0.0"
+  },
+  "changesets": [
+    "young-rings-draw"
+  ]
+}
