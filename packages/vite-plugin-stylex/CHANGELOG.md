@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.9.0-next.1
+
+### Patch Changes
+
+- ac1cf0e: Transform the stylesheet that includes the @stylex stylesheet; before the Vite CSS plugins
+
 ## 0.9.0-next.0
 
 ### Minor Changes
