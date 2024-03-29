@@ -15,7 +15,7 @@ export default defineConfig({
       serverBuildFile: "index.mjs",
     }),
     tsconfigPaths(),
-    styleX() as Plugin,
+    styleX(),
   ],
   css: {
     transformer: "lightningcss",
