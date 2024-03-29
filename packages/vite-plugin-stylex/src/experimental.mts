@@ -283,12 +283,15 @@ export default function styleXVitePlugin({
         return false;
       },
 
-      async transform(inputCode, id) {
+      async transform(inputCode, id, { ssr: isSSR = false } = {}) {
         if (/\.css/.test(id) && inputCode.includes(STYLEX_REPLACE_RULE)) {
           modulesToInvalidate.set(id, inputCode);
 
           if (server) {
-            await server?.waitForRequestsIdle?.(id);
+            if (!isSSR) {
+              await server?.waitForRequestsIdle?.(id);
+            }
+
             return inputCode.replace(STYLEX_REPLACE_RULE, compileStyleX());
           }
         }
