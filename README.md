@@ -41,6 +41,7 @@ Other setups may require extra steps to get StyleX working. For example, Remix r
 - [SvelteKit](#sveltekit)
 - [Vue](#vue)
 - [Qwik](#qwik)
+- [React Strict DOM (RSD)](#react-strict-dom-rsd)
 
 #### Remix
 
@@ -110,6 +111,29 @@ Open the `src/global.css` file and add the following:
 
 > [!NOTE]
 > If you don't have a `src/global.css` file, create one and import it in your `src/root.tsx` file.
+
+#### React Strict DOM (RSD)
+
+Add an import source in your Vite config, like so:
+
+```ts
+import { defineConfig } from 'vite';
+import styleX from 'vite-plugin-stylex';
+
+export default defineConfig({
+  plugins: [
+    // ...other plugins
+    styleX({
+      importSources: [
+        {
+          from: 'react-strict-dom',
+          as: 'css',
+        },
+      ],
+    })
+  ]
+})
+```
 
 #### Other Frameworks
 
