@@ -21,7 +21,9 @@ pnpm add --save-dev vite-plugin-stylex
 
 ## Setup
 
-For a basic SPA setup, you only need to add the plugin to your Vite config:
+### Plugin configuration
+
+Add the plugin to your Vite config:
 
 ```ts
 // ... other imports
@@ -31,6 +33,24 @@ import styleX from "vite-plugin-stylex";
 export default defineConfig({
   plugins: [react(), styleX()],
 });
+```
+
+### Including StyleX styles in your project
+
+Create a CSS file in your project and add the following:
+
+```css
+/* stylex.css */
+@stylex stylesheet;
+
+/* You can use other styles here */
+```
+
+Finally, import the CSS file in your entrypoint:
+
+```ts
+// index.tsx or however your entrypoint is named
+import "./stylex.css";
 ```
 
 ### Extra steps for frameworks or SSR
@@ -59,6 +79,18 @@ Other setups may require extra steps to get StyleX working. For example, Remix r
 ```tsx
 import "./index.css";
 ```
+
+> [!NOTE]
+> You might also want to import the CSS file using url import syntax in your `app/root.tsx` file, and then return it
+> from the links array
+>
+> ```ts
+> import stylexCSS from "./stylex.css?url";
+>
+> export const links = () => [{ rel: "stylesheet", href: stylexCSS }];
+>
+> ...
+> ```
 
 #### SvelteKit
 
@@ -117,8 +149,8 @@ Open the `src/global.css` file and add the following:
 Add an import source in your Vite config, like so:
 
 ```ts
-import { defineConfig } from 'vite';
-import styleX from 'vite-plugin-stylex';
+import { defineConfig } from "vite";
+import styleX from "vite-plugin-stylex";
 
 export default defineConfig({
   plugins: [
@@ -126,13 +158,13 @@ export default defineConfig({
     styleX({
       importSources: [
         {
-          from: 'react-strict-dom',
-          as: 'css',
+          from: "react-strict-dom",
+          as: "css",
         },
       ],
-    })
-  ]
-})
+    }),
+  ],
+});
 ```
 
 #### Other Frameworks
