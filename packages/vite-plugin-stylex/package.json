@@ -19,14 +19,9 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/experimental.d.mts",
-      "import": "./dist/experimental.mjs",
-      "default": "./dist/experimental.mjs"
-    },
-    "./experimental": {
-      "types": "./dist/experimental.d.mts",
-      "import": "./dist/experimental.mjs",
-      "default": "./dist/experimental.mjs"
+      "types": "./dist/main.d.mts",
+      "import": "./dist/main.mjs",
+      "default": "./dist/main.mjs"
     }
   },
   "scripts": {
