@@ -36,15 +36,15 @@
     "vite": "^5.2.7"
   },
   "dependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/plugin-syntax-flow": "^7.23.3",
-    "@babel/plugin-syntax-jsx": "^7.23.3",
-    "@babel/plugin-syntax-typescript": "^7.23.3",
-    "@stylexjs/babel-plugin": "^0.5.1",
+    "@babel/core": "^7.24.7",
+    "@babel/plugin-syntax-flow": "^7.24.7",
+    "@babel/plugin-syntax-jsx": "^7.24.7",
+    "@babel/plugin-syntax-typescript": "^7.24.7",
+    "@stylexjs/babel-plugin": "^0.6.1",
     "compare-versions": "^6.1.0"
   },
   "peerDependencies": {
-    "@stylexjs/stylex": "^0.5.1",
+    "@stylexjs/stylex": "^0.6.1",
     "vite": "^5.2.7"
   },
   "peerDependenciesMeta": {
