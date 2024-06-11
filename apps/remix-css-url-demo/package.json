@@ -1,5 +1,6 @@
 {
   "name": "remix-css-url-demo",
+  "version": "0.0.0",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -15,7 +16,7 @@
     "@remix-run/react": "^2.8.1",
     "@remix-run/serve": "^2.8.1",
     "@stylexjs/open-props": "^0.3.0",
-    "@stylexjs/stylex": "^0.5.1",
+    "@stylexjs/stylex": "^0.6.1",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -29,7 +30,7 @@
     "eslint": "^8.38.0",
     "tsx": "^4.6.2",
     "typescript": "^5.1.6",
-    "vite": "^5.1.6",
+    "vite": "^5.2.7",
     "vite-plugin-stylex": "workspace:*",
     "vite-tsconfig-paths": "^4.3.2"
   },

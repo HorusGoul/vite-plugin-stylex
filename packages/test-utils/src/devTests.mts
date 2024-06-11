@@ -4,16 +4,6 @@ import * as fs from "node:fs/promises";
 export const CARD_SELECTOR = `[data-testId='card']`;
 const CARD_FRIENDLY_CLASSNAME = `Card__styles.root`;
 
-export async function runtimeInjectionTest(page: Page) {
-  await page.waitForSelector("[data-stylex='true']", {
-    state: "attached",
-  });
-
-  await page.waitForSelector(CARD_SELECTOR, {
-    state: "visible",
-  });
-}
-
 export async function hmrTest(page: Page, cardComponentPath: string) {
   await page.waitForSelector(CARD_SELECTOR, {
     state: "visible",

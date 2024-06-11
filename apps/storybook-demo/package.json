@@ -12,27 +12,27 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@stylexjs/stylex": "^0.5.1",
+    "@stylexjs/stylex": "^0.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@internal/test-utils": "workspace:*",
-    "@storybook/addon-essentials": "^7.6.4",
-    "@storybook/addon-interactions": "^7.6.4",
-    "@storybook/addon-links": "^7.6.4",
-    "@storybook/addon-onboarding": "^1.0.10",
-    "@storybook/blocks": "^7.6.4",
-    "@storybook/react": "^7.6.4",
-    "@storybook/react-vite": "^7.6.4",
-    "@storybook/test": "^7.6.4",
+    "@storybook/addon-essentials": "^8.0.5",
+    "@storybook/addon-interactions": "^8.0.5",
+    "@storybook/addon-links": "^8.0.5",
+    "@storybook/addon-onboarding": "^8.0.5",
+    "@storybook/blocks": "^8.0.5",
+    "@storybook/react": "^8.0.5",
+    "@storybook/react-vite": "^8.0.5",
+    "@storybook/test": "^8.0.5",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.2.0",
-    "storybook": "^7.6.4",
+    "storybook": "^8.0.5",
     "tsx": "^4.6.2",
     "typescript": "^5.2.2",
-    "vite": "^4.5.1",
+    "vite": "^5.2.7",
     "vite-plugin-stylex": "workspace:*"
   }
 }

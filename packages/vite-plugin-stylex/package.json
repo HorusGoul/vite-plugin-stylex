@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-stylex",
-  "version": "0.8.3",
+  "version": "0.9.0",
   "description": "Vite Plugin for StyleX",
   "author": "Horus Lugo <hola@horus.dev>",
   "license": "MIT",
@@ -19,9 +19,9 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.mjs"
+      "types": "./dist/main.d.mts",
+      "import": "./dist/main.mjs",
+      "default": "./dist/main.mjs"
     }
   },
   "scripts": {
@@ -33,19 +33,19 @@
     "@types/babel__core": "^7.20.5",
     "@types/node": "20",
     "typescript": "5.2.2",
-    "vite": "^4"
+    "vite": "^5.2.7"
   },
   "dependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/plugin-syntax-flow": "^7.23.3",
-    "@babel/plugin-syntax-jsx": "^7.23.3",
-    "@babel/plugin-syntax-typescript": "^7.23.3",
-    "@stylexjs/babel-plugin": "^0.5.1",
+    "@babel/core": "^7.24.7",
+    "@babel/plugin-syntax-flow": "^7.24.7",
+    "@babel/plugin-syntax-jsx": "^7.24.7",
+    "@babel/plugin-syntax-typescript": "^7.24.7",
+    "@stylexjs/babel-plugin": "^0.6.1",
     "compare-versions": "^6.1.0"
   },
   "peerDependencies": {
-    "@stylexjs/stylex": "^0.5.1",
-    "vite": "^4 || ^5"
+    "@stylexjs/stylex": "^0.6.1",
+    "vite": "^5.2.7"
   },
   "peerDependenciesMeta": {
     "react-strict-dom": {
