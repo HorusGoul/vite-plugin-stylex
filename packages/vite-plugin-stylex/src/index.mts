@@ -220,7 +220,7 @@ export default function styleXVitePlugin({
         if (typeof viteAlias.find === "string") {
           // We need to convert Vite format to this plugin's format:
           // Example: @ -> @/*
-          const alias = path.join(viteAlias.find, "*");
+          const alias = viteAlias.find.concat("/*");
           aliases[alias] = [path.join(viteAlias.replacement, "*")];
         }
       }

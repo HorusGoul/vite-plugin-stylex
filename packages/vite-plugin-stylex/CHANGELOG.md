@@ -39,6 +39,12 @@
   ...
   ```
 
+## 0.8.3
+
+### Patch Changes
+
+- 9a969ac: Fix alias path on Windows to be '@/_' or '@src/_' instead of '@\\_' or '@src\\_'. Thanks to @DarkAng3L for the PR!
+
 ## 0.8.2
 
 ### Patch Changes
