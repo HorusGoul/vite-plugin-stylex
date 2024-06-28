@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.10.0
+
+### Minor Changes
+
+- 378f5c5: Support StyleX 0.7.0
+
 ## 0.9.0
 
 ### Minor Changes
