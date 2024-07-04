@@ -127,7 +127,7 @@ export default function styleXVitePlugin({
 
     // @ts-ignore
     const stylexCSS = stylexBabelPlugin.processStylexRules(
-      rules,
+      rules.filter(Boolean),
       true
     ) as string;
 
