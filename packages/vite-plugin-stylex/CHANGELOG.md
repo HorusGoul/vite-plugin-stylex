@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.10.1
+
+### Patch Changes
+
+- 00f28ca: Remove undefined values from rules array before passing to stylex babel plugin.
+
 ## 0.10.0
 
 ### Minor Changes
