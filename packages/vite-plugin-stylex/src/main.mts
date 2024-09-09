@@ -1,5 +1,5 @@
 import type { Plugin, ViteDevServer, Rollup, AliasOptions } from "vite";
-import babel from "@babel/core";
+import * as babel from "@babel/core";
 import stylexBabelPlugin, {
   Options as StyleXOptions,
 } from "@stylexjs/babel-plugin";
