@@ -68,6 +68,13 @@ interface StyleXVitePluginOptions
    * @default ["@stylexjs/open-props"]
    */
   libraries?: string[];
+
+  /**
+   * Whether to use CSS layers for StyleX styles.
+   *
+   * @default true
+   */
+  useCSSLayers?: boolean;
 }
 
 const STYLEX_REPLACE_RULE = "@stylex stylesheet;";
@@ -76,6 +83,7 @@ export default function styleXVitePlugin({
   unstable_moduleResolution = { type: "commonJS", rootDir: process.cwd() },
   stylexImports = ["@stylexjs/stylex"],
   libraries: inputLibraries = [],
+  useCSSLayers = true,
   ...options
 }: Omit<StyleXVitePluginOptions, "dev" | "fileName"> = {}) {
   const libraries = ["@stylexjs/open-props", ...inputLibraries];
@@ -128,7 +136,7 @@ export default function styleXVitePlugin({
     // @ts-ignore
     const stylexCSS = stylexBabelPlugin.processStylexRules(
       rules.filter(Boolean),
-      true
+      useCSSLayers
     ) as string;
 
     lastStyleXCSS = {
