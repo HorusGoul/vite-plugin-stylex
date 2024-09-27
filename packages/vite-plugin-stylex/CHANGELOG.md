@@ -1,5 +1,15 @@
 # vite-plugin-stylex
 
+## 0.11.0
+
+### Minor Changes
+
+- cb3630d: Add option for CSS layer output (`useCSSLayers`). Thanks to @nathpaiement for the contribution!
+
+### Patch Changes
+
+- d084af2: Fix #82 babel import undefined in Nuxt environments. Thanks to @nathpaiement for the contribution!
+
 ## 0.10.1
 
 ### Patch Changes
