@@ -1,5 +1,11 @@
 # vite-plugin-stylex
 
+## 0.12.0
+
+### Minor Changes
+
+- aeba940: Support for 0.8.0
+
 ## 0.11.0
 
 ### Minor Changes
