@@ -127,7 +127,7 @@ Vue doesn't require any extra setup steps, but here's an example of how you can 
 </script>
 
 <template>
-  <div :class="stylex(styles.root)">
+  <div v-bind="stylex.attrs(styles.root)">
     <slot />
   </div>
 </template>

@@ -13,6 +13,6 @@
   });
 </script>
 
-<div class={stylex(styles.root)} data-testid="card">
+<div {...stylex.attrs(styles.root)} data-testid="card">
   <slot />
 </div>
