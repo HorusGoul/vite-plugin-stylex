@@ -17,7 +17,7 @@ const styles = stylex.create({
 </script>
 
 <template>
-  <div :class="stylex(styles.root)" data-testid="card">
+  <div v-bind="stylex.attrs(styles.root)"  data-testid="card">
     <slot />
   </div>
 </template>

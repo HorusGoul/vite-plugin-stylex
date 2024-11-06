@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@internal/test-utils": "workspace:^",
-    "@stylexjs/stylex": "^0.8.0",
+    "@stylexjs/stylex": "^0.9.3",
     "tsx": "^4.6.2",
     "vite-plugin-stylex": "workspace:^"
   }
